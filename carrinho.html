@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Meu Carrinho - Full Fire</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .carrinho-container {
+      max-width: 800px;
+      margin: 30px auto;
+      padding: 20px;
+      background: #1a1a1a;
+      border-radius: 10px;
+      color: white;
+    }
+    .item-carrinho {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid #444;
+      padding: 15px 0;
+    }
+    .item-carrinho img {
+      width: 80px;
+      border-radius: 8px;
+    }
+    .item-info {
+      flex: 1;
+      margin-left: 15px;
+    }
+    .quantidade {
+      margin: 0 10px;
+    }
+    .total {
+      text-align: right;
+      margin-top: 20px;
+      font-size: 18px;
+      font-weight: bold;
+    }
+    .botao-finalizar {
+      display: block;
+      margin: 30px auto 0;
+      padding: 12px 20px;
+      font-size: 16px;
+      background-color: gold;
+      color: black;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>Meu Carrinho</h1>
+</header>
+
+<main>
+  <div class="carrinho-container" id="itens-carrinho">
+    <!-- Itens serão carregados aqui -->
+  </div>
+
+  <div class="total" id="total-geral"></div>
+
+  <button class="botao-finalizar" onclick="irParaPagamento()">Finalizar Compra</button>
+
+  <button onclick="history.back()" class="botao-voltar">← Voltar</button>
+</main>
+
+<footer>
+  <p>&copy; 2025 Full Fire - Todos os direitos reservados.</p>
+</footer>
+
+<script>
+  const carrinho = JSON.parse(localStorage.getItem("carrinho")) || [];
+  const container = document.getElementById("itens-carrinho");
+
+console.log("Carrinho recuperado:", carrinho);
+
+  fetch("http://localhost:3000/produtos")
+    .then(res => res.json())
+    .then(produtos => {
+      console.log("Produtos carregados do backend:", produtos);
+
+      if (carrinho.length === 0) {
+        container.innerHTML = "<p>Seu carrinho está vazio.</p>";
+        return;
+      }
+
+      let total = 0;
+      container.innerHTML = "";
+
+      carrinho.forEach(item => {
+        const produto = produtos.find(p => p.id == item.id);
+        if (!produto) return;
+
+        const subtotal = produto.preco * item.quantidade;
+        total += subtotal;
+
+        const itemHTML = `
+          <div class="item-carrinho">
+            <img src="${produto.imagem}" alt="${produto.nome}" style="max-width:100px;">
+            <div class="item-info">
+              <h3>${produto.nome}</h3>
+              <p>Preço unitário: R$ ${parseFloat(produto.preco).toFixed(2).replace('.', ',')}</p>
+              <p>Quantidade: ${item.quantidade}</p>
+              <p>Subtotal: R$ ${parseFloat(subtotal).toFixed(2).replace('.', ',')}</p>
+              <button onclick="removerDoCarrinho(${item.id})" class="botao-remover">Remover</button>
+            </div>
+          </div>
+        `;
+        container.innerHTML += itemHTML;
+      });
+
+      document.getElementById("total-geral").innerText = "Total: R$ " + total.toFixed(2).replace('.', ',');
+    })
+    .catch(err => {
+      console.error("Erro ao carregar o carrinho:", err);
+      container.innerHTML = "<p>Erro ao carregar os produtos do carrinho.</p>";
+    });
+
+  function irParaPagamento() {
+    window.location.href = "pagamento.html";
+  }
+
+// Função para remover produto do carrinho
+function removerDoCarrinho(id) {
+  let carrinho = JSON.parse(localStorage.getItem("carrinho")) || [];
+  carrinho = carrinho.filter(item => item.id !== id);
+  localStorage.setItem("carrinho", JSON.stringify(carrinho));
+  location.reload(); // Recarrega a página após remover
+}
+</script>
+</body>
+</html>

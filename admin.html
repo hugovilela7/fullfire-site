@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <title>Painel Administrativo</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #000;
+      color: #fff;
+      margin: 0;
+      padding: 20px;
+    }
+
+    .admin-container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    h1, h2 {
+      color: #FFD700;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 40px;
+    }
+
+    th, td {
+      border: 1px solid #FFD700;
+      padding: 8px;
+      word-wrap: break-word;
+      word-break: break-word;
+      text-align: left;
+    }
+
+    td.produtos-coluna {
+      max-width: 200px;
+      white-space: normal;
+    }
+
+    input, textarea {
+      padding: 8px;
+      margin-bottom: 10px;
+    }
+
+    input[type="submit"], button {
+      background-color: #FFD700;
+      color: black;
+      padding: 10px 15px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .tabela-produtos-container {
+      background-color: #111;
+      padding: 20px;
+      border-radius: 10px;
+      margin-bottom: 50px;
+    }
+
+    .tabela-pedidos-container {
+      background-color: #111;
+      padding: 20px;
+      border-radius: 10px;
+    }
+
+    /* Modal geral */
+.modal {
+  display: none;
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+/* Área interna do modal (caixa) */
+.modal > div {
+  background-color: #111;
+  padding: 2rem;
+  border-radius: 10px;
+  width: 95%;
+  max-width: 400px;
+  color: white;
+
+  /* BRILHO DOURADO */
+  box-shadow: 0 0 5px 3px #FFD700;
+  border: 1px solid #FFD700;
+}
+
+/* Título do modal */
+.modal h2 {
+  color: #FFD700;
+  margin-top: 0;
+}
+
+/* Botão do modal */
+.modal button {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 1.2rem;
+  cursor: pointer;
+}
+
+.tabela-container table {
+  border: 2px solid #FFD700; /* Borda dourada */
+  border-collapse: collapse;
+  box-shadow: 0 0 5px 2px #FFD700; /* Efeito de brilho dourado */
+}
+
+#tabelaProdutos td:nth-child(2),
+#tabelaProdutos th:nth-child(2) {
+  text-align: center;
+}
+
+  </style>
+</head>
+<body>
+  <div class="admin-container">
+    
+    <!-- Seção de Produtos -->
+    <div class="tabela-produtos-container">
+      <h1>Bem-vindo, Administrador</h1>
+      <h2>Produtos Cadastrados</h2>
+
+      <div class="tabela-container">
+      <table id="tabelaProdutos">
+        <thead>
+          <tr>
+           <th style="text-align: center;">Nome</th>
+            <th style="text-align: center;">Preço (R$)</th>
+            <th style="text-align: center;">Descrição</th>
+            <th style="white-space: nowrap; text-align: center;">Imagem</th>
+            <th style="min-width: 150px; text-align: center;">Editar</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Produtos via JS -->
+        </tbody>
+      </table>
+    </div>
+
+      <h2>Adicionar Novo Produto</h2>
+      <form id="formAdicionar">
+        <input type="text" id="nomeProduto" placeholder="Nome do produto" required />
+        <input type="number" step="0.01" id="precoProduto" placeholder="Preço" required />
+        <input type="text" id="descricaoProduto" placeholder="Descrição" required />
+        <input type="text" id="imagemProduto" placeholder="URL da Imagem" required />
+        <input type="submit" value="Adicionar Produto" />
+      </form>
+    </div>
+
+    <!-- Modal de edição -->
+    <div id="modal-editar" class="modal">
+      <div>
+        <button onclick="fecharModal()" style="position:absolute; top:10px; right:10px;">&times;</button>
+        <h2>Editar Produto</h2>
+        <label>Nome:</label>
+        <input id="editar-nome" type="text" style="width:100%;" />
+        <label>Preço:</label>
+        <input id="editar-preco" type="number" style="width:100%;" />
+        <label>Descrição:</label>
+        <textarea id="editar-descricao" style="width:100%;"></textarea>
+        <label>Imagem (URL):</label>
+        <input id="editar-imagem" type="text" style="width:100%;" />
+        <button onclick="salvarEdicao()">Salvar</button>
+      </div>
+    </div>
+
+    <!-- Seção de Pedidos -->
+    <div class="tabela-pedidos-container">
+      <h2>Pedidos Recebidos</h2>
+      <div class="tabela-container">
+      <table id="tabelaPedidos">
+  <thead>
+    <tr>
+      <th style="text-align: center;">Data</th>
+      <th style="text-align: center;">Nome</th>
+      <th style="text-align: center;">Celular</th>
+      <th style="text-align: center;">Email</th>
+      <th style="text-align: center;">Endereço</th>
+      <th style="text-align: center;">Bairro</th>
+      <th style="text-align: center;">Cidade</th>
+      <th style="text-align: center;">Estado</th>
+      <th style="text-align: center;">Forma de Pagamento</th>
+      <th class="produtos-coluna" style="text-align: center;">Produtos</th>
+    </tr>
+  </thead>
+        <tbody>
+          <!-- Pedidos via JS -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <script src="admin-panel.js"></script>
+</body>
+</html>

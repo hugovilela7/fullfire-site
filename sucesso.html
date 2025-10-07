@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Pedido Confirmado | Full Fire</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header>
+    <h1>🔥 Pedido Confirmado!</h1>
+  </header>
+
+  <nav>
+  <a href="index.html">Início</a>
+  <a href="produtos.html">Produtos</a>
+  <a href="carrinho.html">🛒 Carrinho</a>
+</nav>
+
+  <main class="sucesso">
+    <h2>✅ Sua compra foi realizada com sucesso!</h2>
+    <p>Você receberá os detalhes por e-mail e, se necessário, entraremos em contato via WhatsApp.</p>
+    <p>Obrigado por comprar com a <strong>Full Fire</strong>!</p>
+    <a href="index.html" class="btn">Voltar para a Home</a>
+  </main>
+
+  <footer>
+    <p>&copy; 2025 - Full Fire. Todos os direitos reservados.</p>
+  </footer>
+
+  <script>
+    // Limpa o carrinho após compra finalizada
+    localStorage.removeItem("carrinho");
+  </script>
+</body>
+</html>

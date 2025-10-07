@@ -1,0 +1,496 @@
+body {
+  margin: 0;
+  font-family: 'Arial', sans-serif;
+  background-color: #000;
+  color: #fff;
+}
+
+header {
+  background-color: #111;
+  color: #FFD700;
+  padding: 2rem;
+  text-align: center;
+  border-bottom: 3px solid #FFD700;
+}
+
+.destaque {
+  text-align: center;
+  padding: 2rem;
+}
+
+.destaque img {
+  width: 100%;
+  max-width: 400px;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  border: 2px solid #FFD700;
+}
+
+.botao {
+  background-color: #ffd700;
+  color: #000;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 5px;
+  text-decoration: none;
+  font-weight: bold;
+  box-shadow: 0 0 10px rgba(255, 215, 0, 0.4);
+  transition: background 0.3s ease;
+}
+
+.botao:hover {
+  background-color: #e6c200;
+  cursor: pointer;
+}
+
+footer {
+  background-color: #111;
+  color: #FFD700;
+  text-align: center;
+  padding: 1rem;
+  margin-top: 2rem;
+  border-top: 3px solid #FFD700;
+}
+
+.catalogo {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 2rem;
+  padding: 2rem;
+}
+
+.produtos {
+  padding: 40px 20px;
+  text-align: center;
+}
+
+.produtos h1 {
+  font-size: 2em;
+  margin-bottom: 30px;
+  color: #fff;
+}
+
+.produtos-container {
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+  flex-wrap: wrap;
+}
+
+.produto {
+  background-color: #111;
+  border: 1px solid #444;
+  border-radius: 10px;
+  padding: 20px;
+  width: 250px;
+  color: #fff;
+  box-shadow: 0 0 10px rgba(255, 215, 0, 0.2);
+  transition: transform 0.3s;
+}
+
+.produto:hover {
+  transform: scale(1.05);
+}
+
+.produto img {
+  width: 100%;
+  height: auto;
+  border-radius: 5px;
+}
+
+.produto h2 {
+  margin-top: 10px;
+  font-size: 1.2em;
+  color: #ffd700;
+}
+
+.produto p {
+  margin: 10px 0;
+  font-size: 1em;
+}
+
+.produto .botao {
+  background-color: #ffd700;
+  color: #000;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 5px;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.detalhes-produto {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 2rem;
+  gap: 2rem;
+}
+
+.detalhes-produto img {
+  width: 100%;
+  max-width: 400px;
+  border-radius: 8px;
+  border: 2px solid #FFD700;
+}
+
+.info {
+  text-align: center;
+  max-width: 500px;
+}
+
+.info h2 {
+  color: #FFD700;
+}
+
+.preco {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #fff;
+  margin: 1rem 0;
+}
+
+input[type="number"] {
+  padding: 0.5rem;
+  font-size: 1rem;
+  width: 70px;
+  border: 2px solid #FFD700;
+  border-radius: 5px;
+}
+
+.carrinho {
+  max-width: 800px;
+  margin: 2rem auto;
+  padding: 1rem;
+  background-color: #111;
+  border: 2px solid #FFD700;
+  border-radius: 10px;
+}
+
+.item-carrinho {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #FFD700;
+}
+
+.item-carrinho img {
+  width: 100px;
+  border-radius: 5px;
+  border: 2px solid #FFD700;
+}
+
+.item-carrinho .info {
+  color: #fff;
+}
+
+.total-geral {
+  text-align: right;
+  color: #FFD700;
+  margin-top: 1.5rem;
+}
+
+.pagamento {
+  max-width: 600px;
+  margin: 2rem auto;
+  background-color: #111;
+  border: 2px solid #FFD700;
+  border-radius: 10px;
+  padding: 2rem;
+  color: #fff;
+}
+
+.dados-cliente input,
+.metodo input,
+.metodo select {
+  display: block;
+  width: 100%;
+  margin: 0.5rem 0;
+  padding: 0.8rem;
+  border: 1px solid #FFD700;
+  border-radius: 5px;
+  background: #000;
+  color: #fff;
+}
+
+.formas-pagamento h2 {
+  margin-top: 2rem;
+}
+
+label {
+  display: block;
+  margin: 0.5rem 0;
+}
+
+.metodo {
+  margin-top: 1rem;
+  padding: 1rem;
+  border-left: 4px solid #FFD700;
+  background-color: #000;
+}
+
+.sucesso {
+  max-width: 600px;
+  margin: 4rem auto;
+  text-align: center;
+  background-color: #111;
+  padding: 2rem;
+  border-radius: 10px;
+  border: 2px solid #FFD700;
+}
+
+.sucesso h2 {
+  color: #FFD700;
+  margin-bottom: 1rem;
+}
+
+.sucesso p {
+  margin-bottom: 1rem;
+  font-size: 1.1rem;
+}
+
+nav {
+  text-align: center;
+  margin-top: 1rem;
+}
+
+nav a {
+  margin: 0 1rem;
+  text-decoration: none;
+  color: #FFD700;
+  font-weight: bold;
+  border-bottom: 2px solid transparent;
+}
+
+nav a:hover {
+  border-bottom: 2px solid #FFD700;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+.botao-voltar {
+  background-color: gold;
+  color: black;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+  margin: 30px auto;
+  display: block;
+  box-shadow: 0 0 10px rgba(0,0,0,0.2);
+  transition: transform 0.2s, background-color 0.3s;
+}
+
+.botao-voltar:hover {
+  background-color: #e6c200;
+  transform: scale(1.05);
+}
+
+/* Loader - Tela de carregamento */
+#loader {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  background-color: black;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  top: 0;
+  left: 0;
+  transition: opacity 0.5s ease;
+}
+
+.loader-logo {
+  font-size: 3rem;
+  color: gold;
+  font-weight: bold;
+  text-shadow: 0 0 10px rgba(255, 215, 0, 0.8),
+               0 0 20px rgba(255, 215, 0, 0.6),
+               0 0 30px rgba(0, 0, 0, 0.6);
+  animation: pulse 1s infinite alternate;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+    opacity: 0.6;
+  }
+  100% {
+    transform: scale(1.2);
+    opacity: 1;
+  }
+}
+
+.whatsapp-button {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 999;
+  width: 60px;
+  height: 60px;
+  transition: transform 0.3s ease;
+}
+
+.whatsapp-button img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+}
+
+.whatsapp-button:hover {
+  transform: scale(1.1);
+}
+
+.hero {
+  height: 110vh;
+  background-image: url('banner-novo.jpg.jpeg');
+  background-size: cover;
+  background-position: center;
+}
+
+@media screen and (max-width: 768px) {
+  .hero {
+    background-image: url('banner-mobile.jpg.jpeg');
+    background-position: center top;
+  }
+}
+
+#pix-code {
+  word-break: break-all;
+  overflow-wrap: break-word;
+  background-color: #f4f4f4;
+  color: #222; /* <- Cor escura pro texto */
+  padding: 10px;
+  border-radius: 8px;
+  font-size: 14px;
+  max-width: 100%;
+  margin-top: 10px;
+  box-shadow: 0 0 5px rgba(0,0,0,0.1);
+}
+
+.login-container {
+  max-width: 400px;
+  margin: 100px auto;
+  padding: 30px;
+  background-color: #1a1a1a;
+  color: white;
+  border-radius: 12px;
+  box-shadow: 0 0 10px gold;
+}
+
+.login-container h2 {
+  text-align: center;
+  margin-bottom: 20px;
+  color: gold;
+}
+
+.login-container label {
+  display: block;
+  margin-top: 15px;
+}
+
+.login-container input {
+  width: 100%;
+  padding: 10px;
+  margin-top: 5px;
+  border-radius: 8px;
+  border: none;
+}
+
+.login-container button {
+  margin-top: 20px;
+  width: 100%;
+  padding: 10px;
+  background-color: gold;
+  color: black;
+  border: none;
+  font-weight: bold;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.admin-container {
+  max-width: 800px;
+  margin: 40px auto;
+  padding: 20px;
+  background: #111;
+  color: white;
+  border-radius: 12px;
+  box-shadow: 0 0 15px gold;
+}
+
+.admin-container h1,
+.admin-container h2 {
+  text-align: center;
+  color: gold;
+}
+
+.admin-container table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 30px;
+}
+
+.admin-container th, td {
+  border: 1px solid gold;
+  padding: 10px;
+  text-align: center;
+}
+
+.admin-container input, button {
+  padding: 10px;
+  margin: 10px 5px;
+  border-radius: 8px;
+  border: none;
+}
+
+.admin-container button {
+  background-color: gold;
+  color: black;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.botao-remover {
+  background-color: #ff4d4d;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  margin-top: 10px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+#mensagem-alerta {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background-color: #111;
+  color: #FFD700;
+  border: 2px solid #FFD700;
+  padding: 15px 25px;
+  border-radius: 8px;
+  font-weight: bold;
+  box-shadow: 0 0 10px #FFD700;
+  z-index: 10000;
+  animation: fadeOut 3s forwards;
+}
+
+/* Animação para desaparecer suavemente */
+@keyframes fadeOut {
+  0%   { opacity: 1; }
+  80%  { opacity: 1; }
+  100% { opacity: 0; display: none; }
+}
+
