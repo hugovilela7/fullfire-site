@@ -1,8 +1,10 @@
 let produtos = [];
 let produtoEditandoId = null;
 
+const API_URL = "https://fullfire-backend.onrender.com";
+
 // Carrega os produtos ao iniciar
-fetch("http://localhost:3000/produtos")
+fetch(`${API_URL}/produtos`)
   .then(res => res.json())
   .then(data => {
     produtos = Array.isArray(data) ? data : [];
@@ -59,7 +61,7 @@ function salvarEdicao() {
     return;
   }
 
-  fetch(`http://localhost:3000/produtos/${produtoEditandoId}`, {
+  fetch(`${API_URL}/produtos/${produtoEditandoId}`, {
     method: 'PUT',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ nome, preco, descricao, imagem })
@@ -83,7 +85,7 @@ function excluirProduto(index) {
   const id = produto.id;
 
   if (confirm("Tem certeza que deseja excluir este produto?")) {
-    fetch(`http://localhost:3000/produtos/${id}`, {
+    fetch(`${API_URL}/produtos/${id}`, {
       method: "DELETE",
     })
       .then(() => {
@@ -96,7 +98,7 @@ function excluirProduto(index) {
 
 // Pedidos
 function carregarPedidos() {
-  fetch("http://localhost:3000/pedidos")
+  fetch(`${API_URL}/pedidos`)
     .then(res => res.json())
     .then(dados => renderizarPedidos(dados))
     .catch(err => console.error("Erro ao carregar pedidos:", err));
@@ -113,7 +115,8 @@ function renderizarPedidos(pedidos) {
         <div>${p.quantidade}x ${p.nome} – R$ ${parseFloat(p.preco).toFixed(2)}</div>
       `).join("");
 
-      const total = pedido.produtos.reduce((soma, p) => soma + parseFloat(p.preco) * p.quantidade, 0).toFixed(2);
+      const total = pedido.produtos.reduce((soma, p) =>
+        soma + parseFloat(p.preco) * p.quantidade, 0).toFixed(2);
 
       produtosTexto = `
         <div style="max-width: 200px; word-wrap: break-word;">
@@ -125,17 +128,17 @@ function renderizarPedidos(pedidos) {
 
     const linha = document.createElement("tr");
     linha.innerHTML = `
-  <td style="text-align: center;">${new Date(pedido.data).toLocaleString()}</td>
-  <td style="text-align: center;">${pedido.nome}</td>
-  <td style="text-align: center;">${pedido.celular}</td>
-  <td style="text-align: center;">${pedido.email}</td>
-  <td style="text-align: center;">${pedido.endereco}</td>
-  <td style="text-align: center;">${pedido.bairro}</td>
-  <td style="text-align: center;">${pedido.cidade}</td>
-  <td style="text-align: center;">${pedido.estado}</td>
-  <td style="text-align: center;">${pedido.forma_pagamento}</td>
-  <td class="produtos-coluna" style="text-align: center;">${produtosTexto}</td>
-`;
+      <td style="text-align: center;">${new Date(pedido.data).toLocaleString()}</td>
+      <td style="text-align: center;">${pedido.nome}</td>
+      <td style="text-align: center;">${pedido.celular}</td>
+      <td style="text-align: center;">${pedido.email}</td>
+      <td style="text-align: center;">${pedido.endereco}</td>
+      <td style="text-align: center;">${pedido.bairro}</td>
+      <td style="text-align: center;">${pedido.cidade}</td>
+      <td style="text-align: center;">${pedido.estado}</td>
+      <td style="text-align: center;">${pedido.forma_pagamento}</td>
+      <td class="produtos-coluna" style="text-align: center;">${produtosTexto}</td>
+    `;
     corpo.appendChild(linha);
   });
 }
@@ -157,7 +160,7 @@ document.getElementById("formAdicionar").addEventListener("submit", function (e)
     return;
   }
 
-  fetch("http://localhost:3000/produtos", {
+  fetch(`${API_URL}/produtos`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ nome, preco, descricao, imagem }),

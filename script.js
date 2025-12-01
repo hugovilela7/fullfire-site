@@ -18,7 +18,6 @@ function adicionarAoCarrinho(produto) {
   alert("Produto adicionado ao carrinho!");
 }
 
-// Código que roda quando a página é carregada
 document.addEventListener("DOMContentLoaded", () => {
   
   // Seleção do método de pagamento
@@ -51,7 +50,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // Exibição dos produtos (produtos.html)
   const container = document.getElementById("produtos");
   if (container) {
-    fetch('http://localhost:3000/produtos')
+    fetch('https://fullfire-backend.onrender.com/produtos')
       .then(res => res.json())
       .then(produtos => {
         produtos.forEach(produto => {
@@ -60,7 +59,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
           card.innerHTML = `
             <h3>${produto.nome}</h3>
-            <p>R$ ${produto.preco.toFixed(2).replace('.', ',')}</p>
+            <p>R$ ${parseFloat(produto.preco).toFixed(2).replace('.', ',')}</p>
           `;
 
           container.appendChild(card);

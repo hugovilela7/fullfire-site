@@ -1,4 +1,4 @@
-fetch('http://localhost:3000/produtos')
+fetch('https://fullfire-backend.onrender.com/produtos')
   .then(res => res.json())
   .then(produtos => {
     const container = document.getElementById('lista-produtos');

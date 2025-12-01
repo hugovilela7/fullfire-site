@@ -78,9 +78,9 @@
 
 console.log("Carrinho recuperado:", carrinho);
 
-  fetch("http://localhost:3000/produtos")
-    .then(res => res.json())
-    .then(produtos => {
+  fetch("https://fullfire-backend.onrender.com/produtos")
+  .then(res => res.json())
+  .then(produtos => {
       console.log("Produtos carregados do backend:", produtos);
 
       if (carrinho.length === 0) {
