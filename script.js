@@ -1,72 +1,52 @@
-console.log("Site carregado com sucesso!");
+// Recupera produtos e carrinho
+let carrinho = JSON.parse(localStorage.getItem("carrinho")) || [];
 
-// Função para adicionar produto ao carrinho
-function adicionarAoCarrinho(produto) {
-  let carrinho = JSON.parse(localStorage.getItem("carrinho")) || [];
+async function atualizarCarrinho() {
+  const container = document.getElementById("carrinhoContainer");
+  if (!container) return;
 
-  const index = carrinho.findIndex(item => item.id === produto.id);
-
-  if (index > -1) {
-    // Se já existir, aumenta a quantidade
-    carrinho[index].quantidade += produto.quantidade;
-  } else {
-    // Senão, adiciona novo
-    carrinho.push(produto);
+  container.innerHTML = "";
+  if (carrinho.length === 0) {
+    container.innerHTML = "<p>Seu carrinho está vazio.</p>";
+    return;
   }
 
-  localStorage.setItem("carrinho", JSON.stringify(carrinho));
-  alert("Produto adicionado ao carrinho!");
+  try {
+    const res = await fetch("https://fullfire-backend.onrender.com/produtos");
+    const produtos = await res.json();
+
+    let total = 0;
+
+    carrinho.forEach(item => {
+      const produto = produtos.find(p => p.id === item.id);
+      if (!produto) return;
+
+      const subtotal = produto.preco * item.quantidade;
+      total += subtotal;
+
+      const linha = document.createElement("div");
+      linha.classList.add("item-carrinho");
+      linha.innerHTML = `
+        <span>${produto.nome}</span>
+        <span>R$ ${produto.preco.toFixed(2)} x ${item.quantidade}</span>
+        <button onclick="removerDoCarrinho(${produto.id})">❌</button>
+      `;
+      container.appendChild(linha);
+    });
+
+    const totalLinha = document.createElement("div");
+    totalLinha.innerHTML = <strong>Total: R$ ${total.toFixed(2)}</strong>;
+    container.appendChild(totalLinha);
+
+  } catch (erro) {
+    console.error("Erro ao atualizar carrinho:", erro);
+  }
 }
 
-document.addEventListener("DOMContentLoaded", () => {
-  
-  // Seleção do método de pagamento
-  const radios = document.querySelectorAll('input[name="pagamento"]');
-  const metodoPix = document.getElementById("opcao-pix");
-  const metodoBoleto = document.getElementById("opcao-boleto");
-  const metodoCartao = document.getElementById("opcao-cartao");
+function removerDoCarrinho(id) {
+  carrinho = carrinho.filter(item => item.id !== id);
+  localStorage.setItem("carrinho", JSON.stringify(carrinho));
+  atualizarCarrinho();
+}
 
-  radios.forEach(radio => {
-    radio.addEventListener("change", () => {
-      metodoPix.style.display = "none";
-      metodoBoleto.style.display = "none";
-      metodoCartao.style.display = "none";
-
-      if (radio.value === "pix") metodoPix.style.display = "block";
-      if (radio.value === "boleto") metodoBoleto.style.display = "block";
-      if (radio.value === "cartao") metodoCartao.style.display = "block";
-    });
-  });
-
-  // Formulário de pagamento
-  const form = document.getElementById("form-pagamento");
-  if (form) {
-    form.addEventListener("submit", function (e) {
-      e.preventDefault();
-      window.location.href = "sucesso.html";
-    });
-  }
-
-  // Exibição dos produtos (produtos.html)
-  const container = document.getElementById("produtos");
-  if (container) {
-    fetch('https://fullfire-backend.onrender.com/produtos')
-      .then(res => res.json())
-      .then(produtos => {
-        produtos.forEach(produto => {
-          const card = document.createElement("div");
-          card.className = "produto";
-
-          card.innerHTML = `
-            <h3>${produto.nome}</h3>
-            <p>R$ ${parseFloat(produto.preco).toFixed(2).replace('.', ',')}</p>
-          `;
-
-          container.appendChild(card);
-        });
-      })
-      .catch(error => {
-        console.error('Erro ao carregar produtos:', error);
-      });
-  }
-});
+window.onload = atualizarCarrinho;
