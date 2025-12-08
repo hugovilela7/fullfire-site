@@ -5,12 +5,26 @@
   <title>Detalhes do Produto</title>
   <link rel="stylesheet" href="style.css">
   <style>
-    body { background:#000; color:white; font-family:Arial; padding:20px; }
+    body { background:#000; color:white; font-family:Arial; padding:20px; margin:0; }
+    header {
+      display:flex; justify-content:space-between; align-items:center;
+      background:#111; padding:15px 25px; border-bottom:1px solid gold;
+    }
+    header h1 { color:gold; margin:0; font-size:1.4rem; }
+    header a {
+      color:black; background:gold; padding:10px 15px;
+      text-decoration:none; border-radius:5px; font-weight:bold;
+    }
     img { max-width:250px; border-radius:10px; }
     .botao { padding:10px 15px; background:gold; border:none; color:black; cursor:pointer; border-radius:5px; margin-top:10px; }
   </style>
 </head>
 <body>
+
+<header>
+  <h1>Detalhes do Produto</h1>
+  <a href="carrinho.html">🛒 Carrinho</a>
+</header>
 
 <div id="produto-container"></div>
 
@@ -20,8 +34,6 @@
 </div>
 
 <script>
-
-// Produtos FIXOS
 const produtos = [
   {
     id: 1,
@@ -39,15 +51,14 @@ const produtos = [
   }
 ];
 
-const urlParams = new URLSearchParams(window.location.search);
-const id = Number(urlParams.get("id"));
+const id = Number(new URLSearchParams(window.location.search).get("id"));
 const produto = produtos.find(p => p.id === id);
 
 if (!produto) {
   document.getElementById("produto-container").innerHTML = "<p>Produto não encontrado.</p>";
 } else {
   document.getElementById("produto-container").innerHTML = `
-    <h1>${produto.nome}</h1>
+    <h2>${produto.nome}</h2>
     <img src="${produto.imagem}">
     <p>R$ ${produto.preco.toFixed(2).replace(".", ",")}</p>
     <p>${produto.descricao}</p>
@@ -60,25 +71,13 @@ if (!produto) {
 
 function adicionar() {
   const quantidade = parseInt(document.getElementById("quantidade").value);
-
   let carrinho = JSON.parse(localStorage.getItem("carrinho")) || [];
-
   const item = carrinho.find(i => i.id === produto.id);
 
-  if (item) {
-    item.quantidade += quantidade;
-  } else {
-    carrinho.push({
-      id: produto.id,
-      nome: produto.nome,
-      preco: produto.preco,
-      imagem: produto.imagem,
-      quantidade
-    });
-  }
+  if (item) item.quantidade += quantidade;
+  else carrinho.push({ id: produto.id, nome: produto.nome, preco: produto.preco, imagem: produto.imagem, quantidade });
 
   localStorage.setItem("carrinho", JSON.stringify(carrinho));
-
   mostrarAlerta("Produto adicionado ao carrinho!");
 }
 
@@ -86,12 +85,8 @@ function mostrarAlerta(msg) {
   const div = document.getElementById("mensagem-alerta");
   div.innerText = msg;
   div.style.display = "block";
-
-  div.style.animation = "none";
-  void div.offsetWidth;
-  div.style.animation = "fadeOut 3s forwards";
+  setTimeout(() => { div.style.display = "none"; }, 2500);
 }
-
 </script>
 
 </body>

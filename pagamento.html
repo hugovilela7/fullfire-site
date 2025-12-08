@@ -1,146 +1,145 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Pagamento - Full Fire</title>
-<link rel="stylesheet" href="style.css">
-
-<style>
-  body { background: #111; color: #fff; font-family: Arial; }
-  .pagamento-container { max-width: 600px; margin: 40px auto; padding: 20px; background: #1a1a1a; border-radius: 10px; }
-  h2 { color: gold; }
-  .form-group { margin-bottom: 15px; }
-  label { display: block; margin-bottom: 5px; }
-  input, select { width: 100%; padding: 10px; border-radius: 6px; border: none; }
-  .btn { margin-top: 20px; padding: 12px; background-color: gold; color: black; border: none; width: 100%; cursor: pointer; }
-  .btn:hover { background: white; }
-  .info-pagamento { margin-top: 20px; padding: 15px; background: #222; border-radius: 8px; }
-  .qr-simulado { width: 200px; height: 200px; background: white; margin: 10px auto; display: flex; align-items: center; justify-content: center; color: black; font-weight: bold; }
-</style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Pagamento - Full Fire</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    body { background:#111; color:#fff; font-family:Arial, sans-serif; padding:20px; }
+    .box { max-width:700px; margin:0 auto; background:#1a1a1a; padding:20px; border-radius:8px; border:1px solid #333; }
+    label { display:block; margin-top:10px; color:#ccc; }
+    input, select { width:100%; padding:10px; border-radius:6px; border:none; margin-top:6px; }
+    .btn { margin-top:14px; padding:12px; background:#FFD700; color:#000; border:none; border-radius:8px; font-weight:bold; cursor:pointer; width:100%; }
+    .qr { width:200px; height:200px; background:#fff; color:#000; display:flex; align-items:center; justify-content:center; margin:12px auto; }
+  </style>
 </head>
-
 <body>
 
-<main>
-  <div class="pagamento-container">
-    <h2>Total a pagar: <span id="total"></span></h2>
+<div class="box">
+  <h2>Pagamento</h2>
+  <div><strong>Total:</strong> <span id="total">R$ 0,00</span></div>
 
-    <div class="form-group">
-      <label>Nome completo:</label>
-      <input id="nome" required>
-    </div>
+  <label>Nome completo</label>
+  <input id="nome" type="text">
 
-    <div class="form-group">
-      <label>E-mail:</label>
-      <input id="email" required>
-      <label>Celular:</label>
-      <input id="celular" required>
-      <label>CEP:</label>
-      <input id="cep" required>
-      <label>Rua:</label>
-      <input id="endereco" required>
-      <label>Número:</label>
-      <input id="numero" required>
-      <label>Bairro:</label>
-      <input id="bairro" required>
-      <label>Cidade:</label>
-      <input id="cidade" required>
-      <label>Estado:</label>
-      <input id="estado" required>
-    </div>
+  <label>E-mail</label>
+  <input id="email" type="email">
 
-    <div class="form-group">
-      <label>Forma de pagamento:</label>
-      <select id="forma-pagamento" onchange="exibirCampos()">
-        <option value="">Selecione</option>
-        <option value="pix">PIX</option>
-        <option value="qrcode">QR Code</option>
-        <option value="cartao">Cartão de Crédito</option>
-      </select>
-    </div>
+  <label>Celular</label>
+  <input id="celular" type="tel">
 
-    <div id="campos-adicionais" class="info-pagamento"></div>
+  <label>CEP</label>
+  <input id="cep" type="text" placeholder="00000-000">
 
-    <button class="btn" onclick="confirmarPagamento()">Confirmar Pagamento</button>
-  </div>
+  <label>Rua</label>
+  <input id="endereco" type="text">
 
-  <button onclick="history.back()" class="btn" style="margin-top: 10px;">← Voltar</button>
-</main>
+  <label>Número</label>
+  <input id="numero" type="text">
+
+  <label>Bairro</label>
+  <input id="bairro" type="text">
+
+  <label>Cidade</label>
+  <input id="cidade" type="text">
+
+  <label>Estado (UF)</label>
+  <input id="estado" type="text">
+
+  <label>Forma de pagamento</label>
+  <select id="forma">
+    <option value="">Selecione</option>
+    <option value="pix">PIX</option>
+    <option value="qrcode">QR Code</option>
+    <option value="cartao">Cartão</option>
+  </select>
+
+  <div id="camposAdicionais"></div>
+
+  <button class="btn" id="btnConfirm">Confirmar Pagamento</button>
+</div>
 
 <script>
 const API_URL = "https://fullfire-backend.onrender.com";
+let carrinho = JSON.parse(localStorage.getItem('carrinho')) || [];
 
-let carrinho = JSON.parse(localStorage.getItem("carrinho")) || [];
-let total = carrinho.reduce((t, item) => t + item.preco * item.quantidade, 0);
-document.getElementById("total").innerText = "R$ " + total.toFixed(2);
+function formatReal(n){ return n.toFixed(2).replace('.', ','); }
+const total = carrinho.reduce((s,i)=> s + (i.preco * i.quantidade), 0);
+document.getElementById('total').innerText = 'R$ ' + formatReal(total);
 
-// CEP auto preenche
-document.getElementById("cep").addEventListener("blur", async () => {
-  const cep = document.getElementById("cep").value.replace(/\D/g, '');
-  if(cep.length === 8){
-    const res = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
-    const dados = await res.json();
-    if(!dados.erro){
-      document.getElementById("endereco").value = dados.logradouro || '';
-      document.getElementById("bairro").value = dados.bairro || '';
-      document.getElementById("cidade").value = dados.localidade || '';
-      document.getElementById("estado").value = dados.uf || '';
+/* CEP auto preenchimento */
+document.getElementById('cep').addEventListener('blur', async () => {
+  const cep = document.getElementById('cep').value.replace(/\D/g,'');
+  if(cep.length !== 8) return;
+  try{
+    const res = await fetch(`https://viacep.com.br/ws/${cep}/json`);
+    const data = await res.json();
+    if(!data.erro){
+      document.getElementById('endereco').value = data.logradouro || '';
+      document.getElementById('bairro').value = data.bairro || '';
+      document.getElementById('cidade').value = data.localidade || '';
+      document.getElementById('estado').value = data.uf || '';
     }
+  }catch(err){
+    console.error('Erro CEP', err);
   }
 });
 
-function exibirCampos(){
-  const tipo = document.getElementById("forma-pagamento").value;
-  const div = document.getElementById("campos-adicionais");
+/* campos adicionais */
+document.getElementById('forma').addEventListener('change', (e)=>{
+  const div = document.getElementById('camposAdicionais');
+  const v = e.target.value;
+  if(v === 'pix'){
+    div.innerHTML = <p><strong>Chave PIX:</strong> 00020126330014... (simulado)</p>;
+  } else if(v === 'qrcode'){
+    div.innerHTML = <div class="qr">QR CODE</div>;
+  } else if(v === 'cartao'){
+    div.innerHTML = `<label>Número do cartão</label><input id="numCartao"><label>Validade</label><input id="val"><label>CVV</label><input id="cvv">`;
+  } else div.innerHTML = '';
+});
 
-  if(tipo === "pix"){
-    div.innerHTML = <p><strong>Chave PIX:</strong> 00020126330014XXXXX</p>;
-  } 
-  else if(tipo === "qrcode"){
-    div.innerHTML = `<p>Escaneie:</p><div class='qr-simulado'>QR CODE</div>`;
-  }
-  else if(tipo === "cartao"){
-    div.innerHTML = `
-      <label>Número do cartão:</label><input>
-      <label>Validade:</label><input>
-      <label>CVV:</label><input>
-    `;
-  }
-  else div.innerHTML = "";
-}
+/* confirmar */
+document.getElementById('btnConfirm').addEventListener('click', async ()=>{
+  const nome = document.getElementById('nome').value.trim();
+  const email = document.getElementById('email').value.trim();
+  const celular = document.getElementById('celular').value.trim();
+  const cep = document.getElementById('cep').value.trim();
+  const endereco = document.getElementById('endereco').value.trim();
+  const numero = document.getElementById('numero').value.trim();
+  const bairro = document.getElementById('bairro').value.trim();
+  const cidade = document.getElementById('cidade').value.trim();
+  const estado = document.getElementById('estado').value.trim();
+  const formaPagamento = document.getElementById('forma').value;
 
-async function confirmarPagamento(){
-  const nome = nome.value.trim();
-  const email = email.value.trim();
-  const celular = celular.value.trim();
-  const forma = document.getElementById("forma-pagamento").value;
-
-  if(!nome || !email || !celular || !forma){
-    alert("Preencha todos os campos!");
+  if(!nome || !email || !celular || !endereco || !numero || !bairro || !cidade || !estado || !formaPagamento){
+    alert('Preencha todos os campos obrigatórios.');
     return;
   }
 
-  const resposta = await fetch(`${API_URL}/pedidos`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      nome, email, celular,
-      formaPagamento: forma,
-      carrinho
-    })
-  });
-
-  const data = await resposta.json();
-
-  if(data.success){
-    localStorage.removeItem("carrinho");
-    alert("Pedido finalizado!");
-    window.location.href = "sucesso.html";
-  } else {
-    alert("Erro no pedido");
+  try{
+    const resp = await fetch(`${API_URL}/pedidos`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        nome, email, celular, endereco, bairro, cidade, estado,
+        formaPagamento, carrinho
+      })
+    });
+    const data = await resp.json();
+    if(data && data.success){
+      localStorage.removeItem('carrinho');
+      alert('Pedido realizado com sucesso!');
+      window.location.href = 'sucesso.html';
+    } else {
+      console.error('Resposta do servidor:', data);
+      alert('Erro ao finalizar pedido. Tente novamente.');
+    }
+  }catch(err){
+    console.error(err);
+    alert('Erro ao enviar pedido.');
   }
-}
+});
 </script>
 
 </body>
