@@ -1,52 +1,38 @@
-// Recupera produtos e carrinho
-let carrinho = JSON.parse(localStorage.getItem("carrinho")) || [];
-
-async function atualizarCarrinho() {
-  const container = document.getElementById("carrinhoContainer");
-  if (!container) return;
-
-  container.innerHTML = "";
-  if (carrinho.length === 0) {
-    container.innerHTML = "<p>Seu carrinho está vazio.</p>";
-    return;
+// Produtos FIXOS
+const produtos = [
+  {
+    id: 1,
+    nome: "10 Caixas De Carvão 600 unidades - Full Fire",
+    preco: 249.00,
+    imagem: "https://seu-host.com/img/caixa12.jpg",
+    descricao: "Carvão de coco premium Full Fire, alta duração."
+  },
+  {
+    id: 2,
+    nome: "Caixa com 60 unidades - Full Fire",
+    preco: 26.00,
+    imagem: "https://seu-host.com/img/caixa60.jpg",
+    descricao: "Ideal para quem busca melhor custo-benefício."
   }
+];
 
-  try {
-    const res = await fetch("https://fullfire-backend.onrender.com/produtos");
-    const produtos = await res.json();
+// Renderização dos produtos fixos
+const container = document.getElementById("produtos-container");
 
-    let total = 0;
+produtos.forEach(prod => {
+  const card = document.createElement("div");
+  card.classList.add("produto-card");
 
-    carrinho.forEach(item => {
-      const produto = produtos.find(p => p.id === item.id);
-      if (!produto) return;
+  card.innerHTML = `
+    <img src="${prod.imagem}" alt="${prod.nome}">
+    <h3>${prod.nome}</h3>
+    <p class="preco">R$ ${prod.preco.toFixed(2).replace(".", ",")}</p>
+    <button onclick="verDetalhes(${prod.id})">Ver Detalhes</button>
+  `;
 
-      const subtotal = produto.preco * item.quantidade;
-      total += subtotal;
+  container.appendChild(card);
+});
 
-      const linha = document.createElement("div");
-      linha.classList.add("item-carrinho");
-      linha.innerHTML = `
-        <span>${produto.nome}</span>
-        <span>R$ ${produto.preco.toFixed(2)} x ${item.quantidade}</span>
-        <button onclick="removerDoCarrinho(${produto.id})">❌</button>
-      `;
-      container.appendChild(linha);
-    });
-
-    const totalLinha = document.createElement("div");
-    totalLinha.innerHTML = <strong>Total: R$ ${total.toFixed(2)}</strong>;
-    container.appendChild(totalLinha);
-
-  } catch (erro) {
-    console.error("Erro ao atualizar carrinho:", erro);
-  }
+function verDetalhes(id) {
+  window.location.href = `detalhes.html?id=${id}`;
 }
-
-function removerDoCarrinho(id) {
-  carrinho = carrinho.filter(item => item.id !== id);
-  localStorage.setItem("carrinho", JSON.stringify(carrinho));
-  atualizarCarrinho();
-}
-
-window.onload = atualizarCarrinho;

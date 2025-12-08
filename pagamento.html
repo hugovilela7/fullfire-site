@@ -5,55 +5,53 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Pagamento - Full Fire</title>
 <link rel="stylesheet" href="style.css">
+
 <style>
-  body { background: #111; color: #fff; font-family: Arial, sans-serif; }
+  body { background: #111; color: #fff; font-family: Arial; }
   .pagamento-container { max-width: 600px; margin: 40px auto; padding: 20px; background: #1a1a1a; border-radius: 10px; }
   h2 { color: gold; }
   .form-group { margin-bottom: 15px; }
   label { display: block; margin-bottom: 5px; }
-  input, select { width: 100%; padding: 10px; border-radius: 6px; border: none; font-size: 14px; }
-  .btn { margin-top: 20px; padding: 12px 20px; font-size: 16px; background-color: gold; color: black; border: none; border-radius: 8px; cursor: pointer; width: 100%; }
-  .btn:hover { background-color: #fff; }
+  input, select { width: 100%; padding: 10px; border-radius: 6px; border: none; }
+  .btn { margin-top: 20px; padding: 12px; background-color: gold; color: black; border: none; width: 100%; cursor: pointer; }
+  .btn:hover { background: white; }
   .info-pagamento { margin-top: 20px; padding: 15px; background: #222; border-radius: 8px; }
   .qr-simulado { width: 200px; height: 200px; background: white; margin: 10px auto; display: flex; align-items: center; justify-content: center; color: black; font-weight: bold; }
 </style>
 </head>
-<body>
 
-<header>
-  <h1>Pagamento</h1>
-</header>
+<body>
 
 <main>
   <div class="pagamento-container">
     <h2>Total a pagar: <span id="total"></span></h2>
 
     <div class="form-group">
-      <label for="nome">Nome completo:</label>
-      <input type="text" id="nome" placeholder="Seu nome" required>
+      <label>Nome completo:</label>
+      <input id="nome" required>
     </div>
 
     <div class="form-group">
-      <label for="email">E-mail:</label>
-      <input type="email" id="email" placeholder="seu@email.com" required>
-      <label for="celular">Celular:</label>
-      <input type="tel" id="celular" placeholder="(11) 91234-5678" required>
-      <label for="cep">CEP:</label>
-      <input type="text" id="cep" placeholder="Digite o CEP" required>
-      <label for="endereco">Rua:</label>
-      <input type="text" id="endereco" placeholder="Rua" required>
-      <label for="numero">Número:</label>
-      <input type="text" id="numero" placeholder="Número da casa" required>
-      <label for="bairro">Bairro:</label>
-      <input type="text" id="bairro" placeholder="Bairro" required>
-      <label for="cidade">Cidade:</label>
-      <input type="text" id="cidade" placeholder="Cidade" required>
-      <label for="estado">Estado:</label>
-      <input type="text" id="estado" placeholder="UF" required>
+      <label>E-mail:</label>
+      <input id="email" required>
+      <label>Celular:</label>
+      <input id="celular" required>
+      <label>CEP:</label>
+      <input id="cep" required>
+      <label>Rua:</label>
+      <input id="endereco" required>
+      <label>Número:</label>
+      <input id="numero" required>
+      <label>Bairro:</label>
+      <input id="bairro" required>
+      <label>Cidade:</label>
+      <input id="cidade" required>
+      <label>Estado:</label>
+      <input id="estado" required>
     </div>
 
     <div class="form-group">
-      <label for="forma-pagamento">Forma de pagamento:</label>
+      <label>Forma de pagamento:</label>
       <select id="forma-pagamento" onchange="exibirCampos()">
         <option value="">Selecione</option>
         <option value="pix">PIX</option>
@@ -72,97 +70,75 @@
 
 <script>
 const API_URL = "https://fullfire-backend.onrender.com";
-let carrinho = JSON.parse(localStorage.getItem("carrinho")) || [];
-let total = 0;
 
-// Calcula total
-carrinho.forEach(item => {
-  total += item.preco * item.quantidade;
-});
+let carrinho = JSON.parse(localStorage.getItem("carrinho")) || [];
+let total = carrinho.reduce((t, item) => t + item.preco * item.quantidade, 0);
 document.getElementById("total").innerText = "R$ " + total.toFixed(2);
 
-// Preenchimento automático de CEP
+// CEP auto preenche
 document.getElementById("cep").addEventListener("blur", async () => {
   const cep = document.getElementById("cep").value.replace(/\D/g, '');
   if(cep.length === 8){
-    try{
-      const res = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
-      const dados = await res.json();
-      if(!dados.erro){
-        document.getElementById("endereco").value = dados.logradouro || '';
-        document.getElementById("bairro").value = dados.bairro || '';
-        document.getElementById("cidade").value = dados.localidade || '';
-        document.getElementById("estado").value = dados.uf || '';
-      }
-    } catch(err){ console.error("Erro CEP:", err); }
+    const res = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
+    const dados = await res.json();
+    if(!dados.erro){
+      document.getElementById("endereco").value = dados.logradouro || '';
+      document.getElementById("bairro").value = dados.bairro || '';
+      document.getElementById("cidade").value = dados.localidade || '';
+      document.getElementById("estado").value = dados.uf || '';
+    }
   }
 });
 
-// Exibir campos adicionais de pagamento
 function exibirCampos(){
-  const forma = document.getElementById("forma-pagamento").value;
-  const campos = document.getElementById("campos-adicionais");
-  if(forma === "pix"){
-    campos.innerHTML = <p id="pix-code"><strong>Código PIX:</strong> 00020126330014...etc</p>;
-  } else if(forma === "qrcode"){
-    campos.innerHTML = `<p>Escaneie o QR Code abaixo com seu app bancário:</p>
-                        <div class="qr-simulado">QR CODE</div>`;
-  } else if(forma === "cartao"){
-    campos.innerHTML = `<div class="form-group">
-                          <label for="numero-cartao">Número do cartão:</label>
-                          <input type="text" id="numero-cartao" placeholder="1234 5678 9012 3456">
-                        </div>
-                        <div class="form-group">
-                          <label for="validade">Validade:</label>
-                          <input type="text" id="validade" placeholder="MM/AA">
-                        </div>
-                        <div class="form-group">
-                          <label for="cvv">CVV:</label>
-                          <input type="text" id="cvv" placeholder="123">
-                        </div>`;
-  } else { campos.innerHTML = ""; }
+  const tipo = document.getElementById("forma-pagamento").value;
+  const div = document.getElementById("campos-adicionais");
+
+  if(tipo === "pix"){
+    div.innerHTML = <p><strong>Chave PIX:</strong> 00020126330014XXXXX</p>;
+  } 
+  else if(tipo === "qrcode"){
+    div.innerHTML = `<p>Escaneie:</p><div class='qr-simulado'>QR CODE</div>`;
+  }
+  else if(tipo === "cartao"){
+    div.innerHTML = `
+      <label>Número do cartão:</label><input>
+      <label>Validade:</label><input>
+      <label>CVV:</label><input>
+    `;
+  }
+  else div.innerHTML = "";
 }
 
-// Confirmar pagamento
 async function confirmarPagamento(){
-  const nome = document.getElementById("nome").value.trim();
-  const email = document.getElementById("email").value.trim();
-  const celular = document.getElementById("celular").value.trim();
-  const cep = document.getElementById("cep").value.trim();
-  const endereco = document.getElementById("endereco").value.trim();
-  const numero = document.getElementById("numero").value.trim();
-  const bairro = document.getElementById("bairro").value.trim();
-  const cidade = document.getElementById("cidade").value.trim();
-  const estado = document.getElementById("estado").value.trim();
+  const nome = nome.value.trim();
+  const email = email.value.trim();
+  const celular = celular.value.trim();
   const forma = document.getElementById("forma-pagamento").value;
 
-  if(!nome || !email || !celular || !cep || !endereco || !numero || !bairro || !cidade || !estado || !forma){
-    alert("Preencha todos os campos obrigatórios.");
+  if(!nome || !email || !celular || !forma){
+    alert("Preencha todos os campos!");
     return;
   }
 
-  try{
-    const resposta = await fetch(`${API_URL}/pedidos`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        nome, email, celular, formaPagamento: forma,
-        endereco: endereco + ", " + numero, bairro, cidade, estado,
-        carrinho
-      })
-    });
-    const resultado = await resposta.json();
-    if(resultado.success){
-      localStorage.removeItem("carrinho");
-      alert("Pedido finalizado com sucesso!");
-      window.location.href = "sucesso.html";
-    } else {
-      alert("Erro ao finalizar o pedido.");
-      console.error(resultado);
-    }
-  } catch(err){
-    console.error("Erro ao enviar pedido:", err);
-    alert("Erro ao enviar o pedido.");
+  const resposta = await fetch(`${API_URL}/pedidos`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      nome, email, celular,
+      formaPagamento: forma,
+      carrinho
+    })
+  });
+
+  const data = await resposta.json();
+
+  if(data.success){
+    localStorage.removeItem("carrinho");
+    alert("Pedido finalizado!");
+    window.location.href = "sucesso.html";
+  } else {
+    alert("Erro no pedido");
   }
 }
 </script>

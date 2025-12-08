@@ -2,30 +2,97 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
-  <title>Detalhes do Produto - Full Fire</title>
+  <title>Detalhes do Produto</title>
   <link rel="stylesheet" href="style.css">
+  <style>
+    body { background:#000; color:white; font-family:Arial; padding:20px; }
+    img { max-width:250px; border-radius:10px; }
+    .botao { padding:10px 15px; background:gold; border:none; color:black; cursor:pointer; border-radius:5px; margin-top:10px; }
+  </style>
 </head>
 <body>
 
+<div id="produto-container"></div>
 
-<header>
-  <h1>Detalhes do Produto</h1>
-</header>
+<div id="mensagem-alerta" 
+     style="display:none; background:gold; color:black; padding:10px; margin-top:20px; 
+            border-radius:5px; text-align:center; animation: fadeOut 3s forwards;">
+</div>
 
-<main class="detalhes-produto">
-  <div id="produto-container"></div>
+<script>
 
-  <button onclick="history.back()" class="botao-voltar">← Voltar</button>
-</main>
+// Produtos FIXOS
+const produtos = [
+  {
+    id: 1,
+    nome: "10 Caixas De Carvão 600 unidades - Full Fire",
+    preco: 249.00,
+    imagem: "https://seu-host.com/img/caixa12.jpg",
+    descricao: "Carvão de coco premium Full Fire, alta duração."
+  },
+  {
+    id: 2,
+    nome: "Caixa com 60 unidades - Full Fire",
+    preco: 26.00,
+    imagem: "https://seu-host.com/img/caixa60.jpg",
+    descricao: "Ideal para quem busca melhor custo-benefício."
+  }
+];
 
+const urlParams = new URLSearchParams(window.location.search);
+const id = Number(urlParams.get("id"));
+const produto = produtos.find(p => p.id === id);
 
-<footer>
-  <p>&copy; 2025 Full Fire - Todos os direitos reservados.</p>
-</footer>
+if (!produto) {
+  document.getElementById("produto-container").innerHTML = "<p>Produto não encontrado.</p>";
+} else {
+  document.getElementById("produto-container").innerHTML = `
+    <h1>${produto.nome}</h1>
+    <img src="${produto.imagem}">
+    <p>R$ ${produto.preco.toFixed(2).replace(".", ",")}</p>
+    <p>${produto.descricao}</p>
 
-<script src="script-detalhes.js"></script>
+    <label>Quantidade:</label>
+    <input type="number" id="quantidade" min="1" value="1" style="width:50px;">
+    <button class="botao" onclick="adicionar()">Adicionar ao Carrinho</button>
+  `;
+}
 
-<div id="mensagem-alerta" style="display: none;"></div>
+function adicionar() {
+  const quantidade = parseInt(document.getElementById("quantidade").value);
+
+  let carrinho = JSON.parse(localStorage.getItem("carrinho")) || [];
+
+  const item = carrinho.find(i => i.id === produto.id);
+
+  if (item) {
+    item.quantidade += quantidade;
+  } else {
+    carrinho.push({
+      id: produto.id,
+      nome: produto.nome,
+      preco: produto.preco,
+      imagem: produto.imagem,
+      quantidade
+    });
+  }
+
+  localStorage.setItem("carrinho", JSON.stringify(carrinho));
+
+  mostrarAlerta("Produto adicionado ao carrinho!");
+}
+
+function mostrarAlerta(msg) {
+  const div = document.getElementById("mensagem-alerta");
+  div.innerText = msg;
+  div.style.display = "block";
+
+  div.style.animation = "none";
+  void div.offsetWidth;
+  div.style.animation = "fadeOut 3s forwards";
+}
+
+</script>
 
 </body>
 </html>

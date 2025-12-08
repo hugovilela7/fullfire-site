@@ -2,121 +2,77 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Produtos - Full Fire</title>
   <link rel="stylesheet" href="style.css">
   <style>
-    body {
-      background-color: #000;
-      color: #fff;
-      font-family: 'Segoe UI', sans-serif;
-    }
-    header {
-      background: linear-gradient(135deg, #111, #000);
-      padding: 2rem 1rem;
-      text-align: center;
-      color: #FFD700;
-    }
+    body { background:#000; color:white; font-family:Arial; padding:20px; }
     .produtos-container {
       display: flex;
       flex-wrap: wrap;
-      justify-content: center;
-      padding: 2rem;
+      gap: 20px;
     }
-    .produto-box {
-      background-color: #1c1c1c;
-      border: 1px solid #FFD700;
-      border-radius: 10px;
-      margin: 1rem;
-      padding: 1rem;
-      width: 220px;
-      text-align: center;
+    .produto {
+      background:#111;
+      padding:15px;
+      border-radius:10px;
+      width:250px;
+      text-align:center;
+      cursor:pointer;
+      border:1px solid #333;
     }
-    .produto-box img {
-      max-width: 100%;
-      border-radius: 6px;
+    .produto img {
+      width:200px;
+      height:auto;
+      border-radius:10px;
     }
-    .produto-box h3 {
-      color: #FFD700;
-      margin: 0.5rem 0;
-    }
-    .produto-box p {
-      color: #ccc;
-      font-size: 0.9rem;
-    }
-    .btn-comprar {
-      background-color: #FFD700;
-      color: #000;
-      padding: 0.8rem 1rem;
-      border: none;
-      border-radius: 6px;
-      font-weight: bold;
-      cursor: pointer;
-      margin-top: 0.5rem;
-      width: 100%;
-      transition: 0.3s;
-    }
-    .btn-comprar:hover {
-      background-color: #fff;
-    }
+    .produto h3 { color:gold; }
   </style>
 </head>
 <body>
 
-<header>
-  <h1>Produtos Full Fire</h1>
-</header>
+<h1>Produtos Full Fire</h1>
 
-<main>
-  <div class="produtos-container" id="produtosContainer">
-    <!-- Produtos serão inseridos aqui pelo script -->
-  </div>
-</main>
+<div class="produtos-container" id="lista-produtos"></div>
 
 <script>
-  const API_URL = "https://fullfire-backend.onrender.com";
 
-  // Pega os produtos do backend
-  async function carregarProdutos() {
-    try {
-      const res = await fetch(`${API_URL}/produtos`);
-      const produtos = await res.json();
-
-      const container = document.getElementById("produtosContainer");
-      container.innerHTML = "";
-
-      produtos.forEach(produto => {
-        const box = document.createElement("div");
-        box.classList.add("produto-box");
-        box.innerHTML = `
-          <img src="${produto.imagem}" alt="${produto.nome}">
-          <h3>${produto.nome}</h3>
-          <p>R$ ${parseFloat(produto.preco).toFixed(2)}</p>
-          <button class="btn-comprar" onclick="adicionarAoCarrinho(${produto.id}, '${produto.nome}', ${produto.preco})">Comprar</button>
-        `;
-        container.appendChild(box);
-      });
-    } catch (erro) {
-      console.error("Erro ao carregar produtos:", erro);
-    }
+// 👇 Mesmos produtos fixos que você colocou no detalhes
+const produtos = [
+  {
+    id: 1,
+    nome: "10 Caixas De Carvão 600 unidades - Full Fire",
+    preco: 249.00,
+    imagem: "https://seu-host.com/img/caixa12.jpg"
+  },
+  {
+    id: 2,
+    nome: "Caixa com 60 unidades - Full Fire",
+    preco: 26.00,
+    imagem: "https://seu-host.com/img/caixa60.jpg"
   }
+];
 
-  // Função para adicionar ao carrinho
-  function adicionarAoCarrinho(id, nome, preco) {
-    const carrinho = JSON.parse(localStorage.getItem("carrinho")) || [];
-    const itemExistente = carrinho.find(item => item.id === id);
+// Renderiza os produtos
+const lista = document.getElementById("lista-produtos");
 
-    if (itemExistente) {
-      itemExistente.quantidade += 1;
-    } else {
-      carrinho.push({ id, nome, preco, quantidade: 1 });
-    }
+produtos.forEach(produto => {
+  const div = document.createElement("div");
+  div.className = "produto";
 
-    localStorage.setItem("carrinho", JSON.stringify(carrinho));
-    alert(`Produto "${nome}" adicionado ao carrinho!`);
-  }
+  div.innerHTML = `
+    <img src="${produto.imagem}">
+    <h3>${produto.nome}</h3>
+    <p>R$ ${produto.preco.toFixed(2).replace(".", ",")}</p>
+  `;
 
-  carregarProdutos();
+  // 👇 Clique manda para detalhes SEM ALERTA, SEM CARRINHO
+  div.addEventListener("click", () => {
+    window.location.href = "detalhes.html?id=" + produto.id;
+  });
+
+  lista.appendChild(div);
+});
+
 </script>
 
 </body>
