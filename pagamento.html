@@ -1,213 +1,81 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Pagamento - Full Fire</title>
-  <link rel="stylesheet" href="style.css">
-  <style>
-    body { background:#111; color:#fff; font-family:Arial, sans-serif; padding:20px; }
-    .box { max-width:700px; margin:0 auto; background:#1a1a1a; padding:20px; border-radius:8px; border:1px solid #333; }
-    label { display:block; margin-top:10px; color:#ccc; }
-    input, select { width:100%; padding:10px; border-radius:6px; border:none; margin-top:6px; }
-    .btn { margin-top:14px; padding:12px; background:#FFD700; color:#000; border:none; border-radius:8px; font-weight:bold; cursor:pointer; width:100%; }
-    .qr { width:200px; height:200px; background:#fff; color:#000; display:flex; align-items:center; justify-content:center; margin:12px auto; }
-  </style>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Pagamento - Full Fire</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body { background:#111; color:#fff; font-family:Arial, sans-serif; padding:20px; }
+        .box { max-width:700px; margin:0 auto; background:#1a1a1a; padding:20px; border-radius:8px; border:1px solid #333; }
+        label { display:block; margin-top:10px; color:#ccc; }
+        input, select { width:100%; padding:10px; border-radius:6px; border:none; margin-top:6px; }
+        .btn { margin-top:14px; padding:12px; background:#FFD700; color:#000; border:none; border-radius:8px; font-weight:bold; cursor:pointer; width:100%; }
+        .qr { width:200px; height:200px; background:#fff; color:#000; display:flex; align-items:center; justify-content:center; margin:12px auto; }
+    </style>
 </head>
 <body>
 
 <div class="box">
-  <h2>Pagamento</h2>
+    <h2>Pagamento</h2>
 
-  <!-- TOTAL -->
-  <div><strong>Total:</strong> <span id="total">R$ 0,00</span></div>
-  <div id="freteInfo" style="margin-top:8px; color:#aaa;"></div>
+    <div><strong>Total:</strong> <span id="total">R$ 0,00</span></div>
+    <div id="freteInfo" style="margin-top:8px; color:#aaa;"></div>
 
-  <label>Nome completo</label>
-  <input id="nome" type="text">
+    <label>Nome completo</label>
+    <input id="nome" type="text">
 
-  <label>E-mail</label>
-  <input id="email" type="email">
+    <label>E-mail</label>
+    <input id="email" type="email">
 
-  <label>Celular</label>
-  <input id="celular" type="tel">
+    <label>Celular</label>
+    <input id="celular" type="tel">
 
-  <label>CEP</label>
-  <input id="cep" type="text" placeholder="00000-000">
+    <label>CEP</label>
+    <input id="cep" type="text" placeholder="00000-000">
 
-  <label>Rua</label>
-  <input id="endereco" type="text">
+    <label>Rua</label>
+    <input id="endereco" type="text">
 
-  <label>Número</label>
-  <input id="numero" type="text">
+    <label>Número</label>
+    <input id="numero" type="text">
 
-  <label>Bairro</label>
-  <input id="bairro" type="text">
+    <label>Bairro</label>
+    <input id="bairro" type="text">
 
-  <label>Cidade</label>
-  <input id="cidade" type="text">
+    <label>Cidade</label>
+    <input id="cidade" type="text">
 
-  <label>Estado (UF)</label>
-  <input id="estado" type="text">
+    <label>Estado (UF)</label>
+    <input id="estado" type="text">
 
-  <label>Forma de pagamento</label>
-  <select id="forma">
-    <option value="">Selecione</option>
-    <option value="pix">PIX</option>
-    <option value="qrcode">QR Code</option>
-    <option value="cartao">Cartão</option>
-  </select>
+    <label>Forma de pagamento</label>
+    <select id="forma">
+        <option value="">Selecione</option>
+        <option value="pix">PIX</option>
+        <option value="qrcode">QR Code</option>
+        <option value="cartao">Cartão</option>
+    </select>
 
-  <div id="camposAdicionais"></div>
+    <div id="camposAdicionais"></div>
 
-  <button class="btn" id="btnConfirm">Confirmar Pagamento</button>
+    <button class="btn" id="btnConfirm">Confirmar Pagamento</button>
 </div>
 
-<script>
-const API_URL = "https://fullfire-backend.onrender.com";
-let carrinho = JSON.parse(localStorage.getItem('carrinho')) || [];
+<script src="pagamento.js"></script>
 
-function formatReal(n){ return n.toFixed(2).replace('.', ','); }
-
-let totalProdutos = carrinho.reduce((s,i)=> s + (i.preco * i.quantidade), 0);
-let valorFrete = 0;
-let totalFinal = totalProdutos;
-
-document.getElementById('total').innerText = 'R$ ' + formatReal(totalFinal);
-
-/* CEP AUTO-PREENCHIMENTO + FRETE */
-document.getElementById('cep').addEventListener('blur', async () => {
-  const cep = document.getElementById('cep').value.replace(/\D/g,'');
-  if(cep.length !== 8) return;
-
-  try {
-    const res = await fetch(`https://viacep.com.br/ws/${cep}/json`);
-    const data = await res.json();
-
-    if(!data.erro){
-      document.getElementById('endereco').value = data.logradouro || '';
-      document.getElementById('bairro').value = data.bairro || '';
-      document.getElementById('cidade').value = data.localidade || '';
-      document.getElementById('estado').value = data.uf || '';
-
-      /* CHECAR SE É SÃO PAULO */
-      if(data.uf !== "SP"){
-        alert("Desculpe, a Full Fire entrega apenas no Estado de São Paulo.");
-        valorFrete = 0;
-        totalFinal = totalProdutos;
-        document.getElementById('freteInfo').innerHTML = `<span style="color:#f66;">Entrega indisponível para este CEP.</span>`;
-        document.getElementById('total').innerText = "R$ " + formatReal(totalFinal);
-        return;
-      }
-
-      /* CALCULAR FRETE PARA QUALQUER CEP DE SP */
-      valorFrete = 9.90;  
-      totalFinal = totalProdutos + valorFrete;
-
-      document.getElementById('freteInfo').innerHTML = `Frete (SP): R$ ${formatReal(valorFrete)}`;
-      document.getElementById('total').innerText = "R$ " + formatReal(totalFinal);
-    }
-
-  } catch(err){
-    console.error('Erro CEP', err);
-  }
-});
-
-/* CAMPOS ADICIONAIS */
-document.getElementById('forma').addEventListener('change', (e)=>{
-  const div = document.getElementById('camposAdicionais');
-  const v = e.target.value;
-
-  if(v === 'pix'){
-    div.innerHTML = <p><strong>Chave PIX:</strong> 00020126330014... (simulado)</p>;
-  } 
-  else if(v === 'qrcode'){
-    div.innerHTML = <div class="qr">QR CODE</div>;
-  } 
-  else if(v === 'cartao'){
-    div.innerHTML = `
-      <label>Número do cartão</label><input id="numCartao">
-      <label>Validade</label><input id="val">
-      <label>CVV</label><input id="cvv">
-    `;
-  } 
-  else div.innerHTML = '';
-});
-
-/* CONFIRMAR PEDIDO */
-document.getElementById('btnConfirm').addEventListener('click', async ()=>{
-  const nome = document.getElementById('nome').value.trim();
-  const email = document.getElementById('email').value.trim();
-  const celular = document.getElementById('celular').value.trim();
-  const cep = document.getElementById('cep').value.trim();
-  const endereco = document.getElementById('endereco').value.trim();
-  const numero = document.getElementById('numero').value.trim();
-  const bairro = document.getElementById('bairro').value.trim();
-  const cidade = document.getElementById('cidade').value.trim();
-  const estado = document.getElementById('estado').value.trim();
-  const formaPagamento = document.getElementById('forma').value;
-
-  if(!nome || !email || !celular || !endereco || !numero || !bairro || !cidade || !estado || !formaPagamento){
-    alert('Preencha todos os campos obrigatórios.');
-    return;
-  }
-
-  if(estado !== "SP"){
-    alert("A Full Fire entrega apenas no Estado de São Paulo.");
-    return;
-  }
-
-  try{
-    const resp = await fetch(`${API_URL}/pedidos`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        nome,
-        email,
-        celular,
-        endereco,
-        numero,
-        bairro,
-        cidade,
-        estado,
-        cep,
-        formaPagamento,
-        frete: valorFrete,
-        totalFinal,
-        carrinho
-      })
-    });
-
-    const data = await resp.json();
-
-    if(data && data.success){
-      localStorage.removeItem('carrinho');
-      alert('Pedido realizado com sucesso!');
-      window.location.href = 'sucesso.html';
-    } else {
-      alert('Erro ao finalizar pedido. Tente novamente.');
-    }
-  }catch(err){
-    alert('Erro ao enviar pedido.');
-    console.error(err);
-  }
-});
-</script>
-
-<button onclick="history.back()" 
+<button onclick="history.back()"
         style="
-          margin-top:20px;
-          padding:10px 15px;
-          background:gold;
-          color:black;
-          border:none;
-          border-radius:5px;
-          cursor:pointer;
-          font-weight:bold;">
-  ← Voltar
+            margin-top:20px;
+            padding:10px 15px;
+            background:gold;
+            color:black;
+            border:none;
+            border-radius:5px;
+            cursor:pointer;
+            font-weight:bold;">
+    ← Voltar
 </button>
 
 </body>
 </html>
-
-<script src="pagamento.js"></script>
