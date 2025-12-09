@@ -1,40 +1,65 @@
-const API_URL = "https://fullfire-backend.onrender.com";
+// Removida a constante API_URL, pois não buscaremos no backend por enquanto.
 const produtosContainer = document.getElementById("produtosContainer");
 
-// NOVO: Variável global para armazenar a lista de produtos carregados
-let produtosList = [];
+// ==============================
+// LISTA DE PRODUTOS FIXOS (HARDCODED)
+// ==============================
+let produtosList = [
+    {
+        id: 1,
+        nome: "10 Caixas De Carvão 600 unidades - Full Fire",
+        preco: 249.00,
+        imagem: "https://seu-host.com/img/caixa12.jpg",
+        descricao: "Carvão de coco premium Full Fire, alta duração."
+    },
+    {
+        id: 2,
+        nome: "Caixa com 60 unidades - Full Fire",
+        preco: 26.00,
+        imagem: "https://seu-host.com/img/caixa60.jpg",
+        descricao: "Ideal para quem busca melhor custo-benefício."
+    }
+];
 
-// Carrega produtos do backend
-async function carregarProdutos() {
-    try {
-        const resposta = await fetch(`${API_URL}/produtos`);
-        produtosList = await resposta.json(); // Armazena a lista na variável global
+// ==============================
+// FUNÇÃO PARA CARREGAR E RENDERIZAR OS PRODUTOS
+// ==============================
+function carregarProdutos() {
+    // Usamos a lista local (produtosList) em vez de buscar na API
+    
+    produtosContainer.innerHTML = "";
 
-        produtosContainer.innerHTML = "";
-
-        produtosList.forEach(produto => {
-            const card = document.createElement("div");
-            card.className = "produto-card";
-            card.innerHTML = `
-                <img src="${produto.imagem}" alt="${produto.nome}">
-                <h3>${produto.nome}</h3>
-                <p>${produto.descricao}</p>
-                <p><strong>R$ ${parseFloat(produto.preco).toFixed(2).replace('.', ',')}</strong></p>
-                <button onclick="adicionarAoCarrinho(${produto.id})">Adicionar ao Carrinho</button>
-            `;
-            produtosContainer.appendChild(card);
-        });
-    } catch (erro) {
-        console.error("Erro ao carregar produtos:", erro);
-        produtosContainer.innerHTML = "<p>Erro ao carregar produtos. Tente novamente mais tarde.</p>";
+    produtosList.forEach(produto => {
+        const card = document.createElement("div");
+        // Nota: Garanta que o estilo 'produto-card' esteja no seu style.css ou no HTML
+        card.className = "produto-card"; 
+        
+        // Renderiza o preço com vírgula para visualização
+        const precoFormatado = parseFloat(produto.preco).toFixed(2).replace('.', ',');
+        
+        card.innerHTML = `
+            <img src="${produto.imagem}" alt="${produto.nome}">
+            <h3>${produto.nome}</h3>
+            <p>${produto.descricao}</p>
+            <p><strong>R$ ${precoFormatado}</strong></p>
+            <button onclick="adicionarAoCarrinho(${produto.id})">Adicionar ao Carrinho</button>
+        `;
+        produtosContainer.appendChild(card);
+    });
+    
+    // Se a lista estiver vazia (embora improvável com dados fixos)
+    if (produtosList.length === 0) {
+         produtosContainer.innerHTML = "<p>Nenhum produto disponível.</p>";
     }
 }
 
-// Adiciona produto ao carrinho (localStorage) - CORRIGIDA
+// ==============================
+// FUNÇÃO ADICIONAR AO CARRINHO (A CHAVE PARA O CÁLCULO)
+// ==============================
 function adicionarAoCarrinho(produtoId) {
     let carrinho = JSON.parse(localStorage.getItem("carrinho")) || [];
     
-    // 1. Encontra o produto COMPLETO na lista
+    // 1. Encontra o produto COMPLETO na lista fixa
     const produtoCompleto = produtosList.find(p => p.id === produtoId);
 
     if (!produtoCompleto) {
@@ -48,11 +73,11 @@ function adicionarAoCarrinho(produtoId) {
     if (itemExistente) {
         itemExistente.quantidade += 1;
     } else {
-        // 2. CORREÇÃO: Adiciona PREÇO, NOME, IMAGEM e ID
+        // 2. Adiciona todas as informações necessárias (ID, NOME, PREÇO, IMAGEM, QTD)
         carrinho.push({
             id: produtoCompleto.id,
             nome: produtoCompleto.nome,
-            preco: parseFloat(produtoCompleto.preco), // Garante que o preço seja um número
+            preco: parseFloat(produtoCompleto.preco), // O PREÇO É SALVO COMO NÚMERO
             imagem: produtoCompleto.imagem,
             quantidade: 1 
         });
@@ -60,10 +85,7 @@ function adicionarAoCarrinho(produtoId) {
 
     localStorage.setItem("carrinho", JSON.stringify(carrinho));
     alert("Produto adicionado ao carrinho!");
-    
-    // Se o seu site usa um contador de itens no cabeçalho, você deve atualizar ele aqui.
-    // window.dispatchEvent(new Event('storage')); // Se você usa um listener global
 }
 
-// Inicia
+// Inicia o carregamento dos produtos assim que o script é lido
 carregarProdutos();
