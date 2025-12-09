@@ -18,7 +18,10 @@
 
 <div class="box">
   <h2>Pagamento</h2>
+
+  <!-- TOTAL -->
   <div><strong>Total:</strong> <span id="total">R$ 0,00</span></div>
+  <div id="freteInfo" style="margin-top:8px; color:#aaa;"></div>
 
   <label>Nome completo</label>
   <input id="nome" type="text">
@@ -65,41 +68,73 @@ const API_URL = "https://fullfire-backend.onrender.com";
 let carrinho = JSON.parse(localStorage.getItem('carrinho')) || [];
 
 function formatReal(n){ return n.toFixed(2).replace('.', ','); }
-const total = carrinho.reduce((s,i)=> s + (i.preco * i.quantidade), 0);
-document.getElementById('total').innerText = 'R$ ' + formatReal(total);
 
-/* CEP auto preenchimento */
+let totalProdutos = carrinho.reduce((s,i)=> s + (i.preco * i.quantidade), 0);
+let valorFrete = 0;
+let totalFinal = totalProdutos;
+
+document.getElementById('total').innerText = 'R$ ' + formatReal(totalFinal);
+
+/* CEP AUTO-PREENCHIMENTO + FRETE */
 document.getElementById('cep').addEventListener('blur', async () => {
   const cep = document.getElementById('cep').value.replace(/\D/g,'');
   if(cep.length !== 8) return;
-  try{
+
+  try {
     const res = await fetch(`https://viacep.com.br/ws/${cep}/json`);
     const data = await res.json();
+
     if(!data.erro){
       document.getElementById('endereco').value = data.logradouro || '';
       document.getElementById('bairro').value = data.bairro || '';
       document.getElementById('cidade').value = data.localidade || '';
       document.getElementById('estado').value = data.uf || '';
+
+      /* CHECAR SE É SÃO PAULO */
+      if(data.uf !== "SP"){
+        alert("Desculpe, a Full Fire entrega apenas no Estado de São Paulo.");
+        valorFrete = 0;
+        totalFinal = totalProdutos;
+        document.getElementById('freteInfo').innerHTML = `<span style="color:#f66;">Entrega indisponível para este CEP.</span>`;
+        document.getElementById('total').innerText = "R$ " + formatReal(totalFinal);
+        return;
+      }
+
+      /* CALCULAR FRETE PARA QUALQUER CEP DE SP */
+      valorFrete = 9.90;  
+      totalFinal = totalProdutos + valorFrete;
+
+      document.getElementById('freteInfo').innerHTML = `Frete (SP): R$ ${formatReal(valorFrete)}`;
+      document.getElementById('total').innerText = "R$ " + formatReal(totalFinal);
     }
-  }catch(err){
+
+  } catch(err){
     console.error('Erro CEP', err);
   }
 });
 
-/* campos adicionais */
+/* CAMPOS ADICIONAIS */
 document.getElementById('forma').addEventListener('change', (e)=>{
   const div = document.getElementById('camposAdicionais');
   const v = e.target.value;
+
   if(v === 'pix'){
     div.innerHTML = <p><strong>Chave PIX:</strong> 00020126330014... (simulado)</p>;
-  } else if(v === 'qrcode'){
+  } 
+  else if(v === 'qrcode'){
     div.innerHTML = <div class="qr">QR CODE</div>;
-  } else if(v === 'cartao'){
-    div.innerHTML = `<label>Número do cartão</label><input id="numCartao"><label>Validade</label><input id="val"><label>CVV</label><input id="cvv">`;
-  } else div.innerHTML = '';
+  } 
+  else if(v === 'cartao'){
+    div.innerHTML = `
+      <label>Número do cartão</label><input id="numCartao">
+      <label>Validade</label><input id="val">
+      <label>CVV</label><input id="cvv">
+    `;
+  } 
+  else div.innerHTML = '';
 });
 
-/* confirmar */
+/* CONFIRMAR PEDIDO */
 document.getElementById('btnConfirm').addEventListener('click', async ()=>{
   const nome = document.getElementById('nome').value.trim();
   const email = document.getElementById('email').value.trim();
@@ -117,27 +152,44 @@ document.getElementById('btnConfirm').addEventListener('click', async ()=>{
     return;
   }
 
+  if(estado !== "SP"){
+    alert("A Full Fire entrega apenas no Estado de São Paulo.");
+    return;
+  }
+
   try{
     const resp = await fetch(`${API_URL}/pedidos`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        nome, email, celular, endereco, bairro, cidade, estado,
-        formaPagamento, carrinho
+        nome,
+        email,
+        celular,
+        endereco,
+        numero,
+        bairro,
+        cidade,
+        estado,
+        cep,
+        formaPagamento,
+        frete: valorFrete,
+        totalFinal,
+        carrinho
       })
     });
+
     const data = await resp.json();
+
     if(data && data.success){
       localStorage.removeItem('carrinho');
       alert('Pedido realizado com sucesso!');
       window.location.href = 'sucesso.html';
     } else {
-      console.error('Resposta do servidor:', data);
       alert('Erro ao finalizar pedido. Tente novamente.');
     }
   }catch(err){
-    console.error(err);
     alert('Erro ao enviar pedido.');
+    console.error(err);
   }
 });
 </script>
