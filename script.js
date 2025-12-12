@@ -1,38 +1,48 @@
-// Produtos FIXOS
-const produtos = [
-  {
-    id: 1,
-    nome: "10 Caixas De Carvão 600 unidades - Full Fire",
-    preco: 249.00,
-    imagem: "https://seu-host.com/img/caixa12.jpg",
-    descricao: "Carvão de coco premium Full Fire, alta duração."
-  },
-  {
-    id: 2,
-    nome: "Caixa com 60 unidades - Full Fire",
-    preco: 26.00,
-    imagem: "https://seu-host.com/img/caixa60.jpg",
-    descricao: "Ideal para quem busca melhor custo-benefício."
-  }
-];
+function comprarZap(nomeProduto, precoUnitario, idInputQuantidade) {
+    // 1. Pega a quantidade que o usuário digitou
+    const inputQtd = document.getElementById(idInputQuantidade);
+    let quantidade = parseInt(inputQtd.value);
 
-// Renderização dos produtos fixos
-const container = document.getElementById("produtos-container");
+    // Validação simples: se for menor que 1, assume 1
+    if (quantidade < 1 || isNaN(quantidade)) {
+        quantidade = 1;
+    }
 
-produtos.forEach(prod => {
-  const card = document.createElement("div");
-  card.classList.add("produto-card");
+    // 2. Calcula o total estimado
+    const total = (quantidade * precoUnitario).toFixed(2).replace('.', ',');
 
-  card.innerHTML = `
-    <img src="${prod.imagem}" alt="${prod.nome}">
-    <h3>${prod.nome}</h3>
-    <p class="preco">R$ ${prod.preco.toFixed(2).replace(".", ",")}</p>
-    <button onclick="verDetalhes(${prod.id})">Ver Detalhes</button>
-  `;
+    // 3. Monta a mensagem para o WhatsApp
+    // O comando \n serve para pular linha
+    const mensagem = `Olá, Full Fire! 🔥\n\n` +
+        `Gostaria de fazer um pedido:\n` +
+        `ITEM: *${nomeProduto}*\n` +
+        `QUANTIDADE: *${quantidade}*\n` +
+        `------------------------------\n` +
+        `Valor Total Estimado: R$ ${total}\n\n` +
+        `Como faço para finalizar o pagamento?`;
 
-  container.appendChild(card);
-});
+    // 4. Configura o número e abre o link
+    const numeroLoja = "5511977135785";
+    const textoCodificado = encodeURIComponent(mensagem);
+    const linkWhatsapp = `https://wa.me/${numeroLoja}?text=${textoCodificado}`;
 
-function verDetalhes(id) {
-  window.location.href = `detalhes.html?id=${id}`;
+    // Abre em nova aba
+    window.open(linkWhatsapp, '_blank');
+}
+
+// FUNÇÃO PARA O BOTÃO FLUTUANTE DO WHATSAPP
+function openWhatsappDirect(event) {
+    // Impede o comportamento padrão do link (#)
+    event.preventDefault(); 
+    
+    const numeroLoja = "5511977135785";
+    
+    // Mensagem de contato geral para quem clica no botão flutuante
+    const mensagem = "Olá, Full Fire! 🔥 Gostaria de mais informações ou tirar dúvidas sobre os produtos de carvão.";
+    
+    const textoCodificado = encodeURIComponent(mensagem);
+    const linkWhatsapp = `https://wa.me/${numeroLoja}?text=${textoCodificado}`;
+
+    // Abre em nova aba
+    window.open(linkWhatsapp, '_blank');
 }

@@ -1,496 +1,455 @@
+/* Reset Básico */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
 body {
-  margin: 0;
-  font-family: 'Arial', sans-serif;
-  background-color: #000;
-  color: #fff;
+    font-family: 'Montserrat', sans-serif;
+    background-color: #121212; /* Fundo Escuro */
+    color: #e0e0e0;
+    line-height: 1.6;
 }
 
+/* Container para centralizar */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+/* Header */
 header {
-  background-color: #111;
-  color: #FFD700;
-  padding: 2rem;
-  text-align: center;
-  border-bottom: 3px solid #FFD700;
+    background: #000; /* Fundo totalmente preto para destacar o brilho */
+    padding: 60px 0;
+    text-align: center;
+    border-bottom: 2px solid #ff8c00; /* Linha de destaque */
 }
 
-.destaque {
-  text-align: center;
-  padding: 2rem;
+header h1 {
+    font-size: 3rem;
+    color: #fff;
+    text-transform: uppercase;
+    letter-spacing: 5px; /* Aumenta o espaçamento */
+    margin-bottom: 5px;
+    
+    /* Efeito de Brilho/Neon Laranja */
+    text-shadow: 
+        0 0 10px #ff4500, /* Sombra interna suave */
+        0 0 20px #ff8c00, /* Sombra média */
+        0 0 30px #ff4500; /* Sombra externa forte */
 }
 
-.destaque img {
-  width: 100%;
-  max-width: 400px;
-  border-radius: 8px;
-  margin-bottom: 1rem;
-  border: 2px solid #FFD700;
+header p {
+    font-size: 1.1rem;
+    color: #e0e0e0;
+    margin-top: 10px;
+    font-weight: 400;
 }
 
-.botao {
-  background-color: #ffd700;
-  color: #000;
-  padding: 10px 15px;
-  border: none;
-  border-radius: 5px;
-  text-decoration: none;
-  font-weight: bold;
-  box-shadow: 0 0 10px rgba(255, 215, 0, 0.4);
-  transition: background 0.3s ease;
+/* Títulos */
+.section-title {
+    text-align: center;
+    margin: 40px 0;
+    font-size: 2rem;
+    color: #ff8c00;
+    text-transform: uppercase;
+    border-bottom: 2px solid #333;
+    display: inline-block;
+    padding-bottom: 10px;
 }
 
-.botao:hover {
-  background-color: #e6c200;
-  cursor: pointer;
+/* Grid de Produtos */
+.products-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 30px;
+    margin-bottom: 60px;
 }
 
-footer {
-  background-color: #111;
-  color: #FFD700;
-  text-align: center;
-  padding: 1rem;
-  margin-top: 2rem;
-  border-top: 3px solid #FFD700;
+/* Cartão do Produto */
+.product-card {
+    background-color: #1e1e1e;
+    border-radius: 12px;
+    padding: 20px;
+    text-align: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border: 1px solid #333;
+    position: relative;
+    overflow: hidden;
 }
 
-.catalogo {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 2rem;
-  padding: 2rem;
+.product-card:hover {
+    transform: translateY(-5px) scale(1.02); /* Escala ligeiramente para maior impacto */
+    box-shadow: 
+        0 0 5px #ff8c00, /* Brilho suave */
+        0 0 15px rgba(255, 69, 0, 0.4), /* Brilho de fogo mais forte */
+        0 10px 20px rgba(0, 0, 0, 0.5); /* Sombra para profundidade */
+    border-color: #ff4500; /* Borda mais intensa */
 }
 
-.produtos {
-  padding: 40px 20px;
-  text-align: center;
+/* Badge (Destaque) */
+.badge {
+    position: absolute;
+    top: 15px;
+    right: -30px;
+    background-color: #ff4500;
+    color: white;
+    padding: 5px 30px;
+    transform: rotate(45deg);
+    font-size: 0.8rem;
+    font-weight: bold;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.3);
 }
 
-.produtos h1 {
-  font-size: 2em;
-  margin-bottom: 30px;
-  color: #fff;
+/* Imagem */
+.img-container {
+    width: 100%;
+    height: 250px;
+    background-color: #2c2c2c;
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
-.produtos-container {
-  display: flex;
-  justify-content: center;
-  gap: 40px;
-  flex-wrap: wrap;
+.img-container img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: cover;
 }
 
-.produto {
-  background-color: #111;
-  border: 1px solid #444;
-  border-radius: 10px;
-  padding: 20px;
-  width: 250px;
-  color: #fff;
-  box-shadow: 0 0 10px rgba(255, 215, 0, 0.2);
-  transition: transform 0.3s;
+/* Textos do Card */
+.product-card h3 {
+    font-size: 1.3rem;
+    margin-bottom: 10px;
+    color: #fff;
 }
 
-.produto:hover {
-  transform: scale(1.05);
+.description {
+    font-size: 0.9rem;
+    color: #b0b0b0;
+    margin-bottom: 15px;
+    min-height: 60px; /* Alinha os botões */
 }
 
-.produto img {
-  width: 100%;
-  height: auto;
-  border-radius: 5px;
+.price {
+    font-size: 1.5rem;
+    color: #ff8c00;
+    font-weight: bold;
+    margin-bottom: 15px;
 }
 
-.produto h2 {
-  margin-top: 10px;
-  font-size: 1.2em;
-  color: #ffd700;
-}
-
-.produto p {
-  margin: 10px 0;
-  font-size: 1em;
-}
-
-.produto .botao {
-  background-color: #ffd700;
-  color: #000;
-  padding: 10px 15px;
-  border: none;
-  border-radius: 5px;
-  text-decoration: none;
-  font-weight: bold;
-}
-
-.detalhes-produto {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 2rem;
-  gap: 2rem;
-}
-
-.detalhes-produto img {
-  width: 100%;
-  max-width: 400px;
-  border-radius: 8px;
-  border: 2px solid #FFD700;
-}
-
-.info {
-  text-align: center;
-  max-width: 500px;
-}
-
-.info h2 {
-  color: #FFD700;
-}
-
-.preco {
-  font-size: 1.5rem;
-  font-weight: bold;
-  color: #fff;
-  margin: 1rem 0;
+/* Controles de Compra */
+.buy-controls {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    align-items: center;
 }
 
 input[type="number"] {
-  padding: 0.5rem;
-  font-size: 1rem;
-  width: 70px;
-  border: 2px solid #FFD700;
-  border-radius: 5px;
+    width: 60px;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #444;
+    background-color: #333;
+    color: white;
+    text-align: center;
+    font-size: 1rem;
 }
 
-.carrinho {
-  max-width: 800px;
-  margin: 2rem auto;
-  padding: 1rem;
-  background-color: #111;
-  border: 2px solid #FFD700;
-  border-radius: 10px;
+button {
+    background-color: #25d366; /* Verde WhatsApp */
+    color: white;
+    border: 2px solid #128c7e; /* Borda sutil */
+    padding: 12px 20px;
+    border-radius: 5px;
+    font-weight: 700; /* Mais negrito */
+    cursor: pointer;
+    text-transform: uppercase;
+    transition: all 0.3s ease; /* Transição mais suave */
+    flex-grow: 1;
+    letter-spacing: 0.5px;
 }
 
-.item-carrinho {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  margin-bottom: 1.5rem;
-  padding-bottom: 1rem;
-  border-bottom: 1px solid #FFD700;
+button:hover {
+    background-color: #128c7e;
+    transform: scale(1.05); /* Efeito de clique */
+    box-shadow: 0 0 15px rgba(37, 211, 102, 0.5); /* Brilho sutil do WhatsApp */
 }
 
-.item-carrinho img {
-  width: 100px;
-  border-radius: 5px;
-  border: 2px solid #FFD700;
+/* Footer */
+footer {
+    background-color: #000;
+    color: #888;
+    padding-top: 40px;
+    margin-top: 60px;
+    border-top: 3px solid #1a1a1a;
 }
 
-.item-carrinho .info {
-  color: #fff;
+.footer-content {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); /* 3 Colunas responsivas */
+    gap: 30px;
+    padding-bottom: 40px;
 }
 
-.total-geral {
-  text-align: right;
-  color: #FFD700;
-  margin-top: 1.5rem;
+.footer-content h3 {
+    color: #fff;
+    font-size: 1.1rem;
+    margin-bottom: 20px;
+    text-transform: uppercase;
+    border-bottom: 1px solid #333;
+    padding-bottom: 5px;
 }
 
-.pagamento {
-  max-width: 600px;
-  margin: 2rem auto;
-  background-color: #111;
-  border: 2px solid #FFD700;
-  border-radius: 10px;
-  padding: 2rem;
-  color: #fff;
+.footer-content p, .footer-content a {
+    margin-bottom: 10px;
+    color: #ccc;
+    text-decoration: none;
+    display: block;
+    font-size: 0.95rem;
 }
 
-.dados-cliente input,
-.metodo input,
-.metodo select {
-  display: block;
-  width: 100%;
-  margin: 0.5rem 0;
-  padding: 0.8rem;
-  border: 1px solid #FFD700;
-  border-radius: 5px;
-  background: #000;
-  color: #fff;
+.footer-content a:hover {
+    color: #ff8c00;
 }
 
-.formas-pagamento h2 {
-  margin-top: 2rem;
+.footer-info i, .footer-social i, .footer-delivery i {
+    color: #ff8c00;
+    margin-right: 8px;
+    font-size: 1.1rem;
 }
 
-label {
-  display: block;
-  margin: 0.5rem 0;
+/* Estilo para Redes Sociais */
+.social-icon {
+    display: inline-flex;
+    align-items: center;
+    transition: color 0.3s;
 }
 
-.metodo {
-  margin-top: 1rem;
-  padding: 1rem;
-  border-left: 4px solid #FFD700;
-  background-color: #000;
+.social-icon i {
+    color: #ff4500;
+    font-size: 1.3rem;
+    margin-right: 10px;
 }
 
-.sucesso {
-  max-width: 600px;
-  margin: 4rem auto;
-  text-align: center;
-  background-color: #111;
-  padding: 2rem;
-  border-radius: 10px;
-  border: 2px solid #FFD700;
+/* Estilo da Entrega */
+.footer-delivery p {
+    font-weight: bold;
+    color: #fff; /* Destaque na informação principal */
 }
 
-.sucesso h2 {
-  color: #FFD700;
-  margin-bottom: 1rem;
+.delivery-note {
+    font-size: 0.85rem;
+    font-style: italic;
+    color: #888;
 }
 
-.sucesso p {
-  margin-bottom: 1rem;
-  font-size: 1.1rem;
+.footer-bottom {
+    background-color: #111;
+    padding: 15px 0;
+    text-align: center;
+    border-top: 1px solid #333;
 }
 
-nav {
-  text-align: center;
-  margin-top: 1rem;
+.footer-bottom p {
+    margin: 0;
+    font-size: 0.8rem;
+    color: #666;
 }
 
-nav a {
-  margin: 0 1rem;
-  text-decoration: none;
-  color: #FFD700;
-  font-weight: bold;
-  border-bottom: 2px solid transparent;
+/* Responsivo para o Rodapé */
+@media (max-width: 768px) {
+    .footer-content {
+        grid-template-columns: 1fr; /* Uma coluna no celular */
+        text-align: left;
+    }
 }
 
-nav a:hover {
-  border-bottom: 2px solid #FFD700;
+/* Responsivo */
+@media (max-width: 600px) {
+    header h1 { font-size: 2rem; }
+    .products-grid { grid-template-columns: 1fr; }
 }
 
-html {
-  scroll-behavior: smooth;
+/* --- SEÇÃO QUEM SOMOS --- */
+.about-section {
+    margin-top: 80px;
+    padding: 60px 0;
+    background-color: #1a1a1a; /* Um tom levemente diferente do fundo */
+    border-top: 1px solid #333;
+    border-bottom: 1px solid #333;
 }
 
-.botao-voltar {
-  background-color: gold;
-  color: black;
-  padding: 10px 20px;
-  border: none;
-  border-radius: 8px;
-  font-weight: bold;
-  cursor: pointer;
-  margin: 30px auto;
-  display: block;
-  box-shadow: 0 0 10px rgba(0,0,0,0.2);
-  transition: transform 0.2s, background-color 0.3s;
+.about-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* Divide a tela em 2 colunas */
+    gap: 50px;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+    align-items: center;
 }
 
-.botao-voltar:hover {
-  background-color: #e6c200;
-  transform: scale(1.05);
+/* Estilo do Texto da Marca */
+.about-brand p {
+    margin-bottom: 20px;
+    font-size: 1.1rem;
+    color: #ccc;
+    text-align: justify;
 }
 
-/* Loader - Tela de carregamento */
-#loader {
-  position: fixed;
-  width: 100%;
-  height: 100%;
-  background-color: black;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 9999;
-  top: 0;
-  left: 0;
-  transition: opacity 0.5s ease;
+.about-brand strong {
+    color: #ff8c00; /* Laranja da marca */
 }
 
-.loader-logo {
-  font-size: 3rem;
-  color: gold;
-  font-weight: bold;
-  text-shadow: 0 0 10px rgba(255, 215, 0, 0.8),
-               0 0 20px rgba(255, 215, 0, 0.6),
-               0 0 30px rgba(0, 0, 0, 0.6);
-  animation: pulse 1s infinite alternate;
-  display: flex;
-  align-items: center;
-  gap: 10px;
+/* Estilo dos Benefícios */
+.about-benefits h3 {
+    font-size: 1.8rem;
+    color: #fff;
+    margin-bottom: 25px;
+    /* Linha de energia moderna (em vez de borda simples) */
+    border-bottom: 2px solid #ff4500;
+    padding-bottom: 5px;
+    display: inline-block;
 }
 
+.intro-benefit {
+    margin-bottom: 25px;
+    font-style: italic;
+    color: #888;
+}
+
+.benefit-list {
+    list-style: none;
+}
+
+.benefit-list li {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 20px;
+    background: #252525;
+    padding: 15px;
+    border-radius: 8px;
+    transition: transform 0.2s;
+}
+
+.benefit-list li:hover {
+    transform: translateX(10px); /* Efeito de movimento ao passar o mouse */
+    border-left: 3px solid #ff8c00;
+}
+
+.benefit-list .icon {
+    font-size: 2rem;
+    margin-right: 15px;
+    line-height: 1;
+}
+
+.benefit-list .text strong {
+    color: #fff;
+    font-size: 1.1rem;
+    display: block;
+    margin-bottom: 5px;
+}
+
+.benefit-list .text {
+    font-size: 0.95rem;
+    color: #bbb;
+}
+
+/* Responsivo para Celular */
+@media (max-width: 800px) {
+    .about-container {
+        grid-template-columns: 1fr; /* Vira uma coluna só no celular */
+        gap: 40px;
+    }
+    
+    .about-brand p {
+        text-align: left;
+    }
+}
+
+/* --- ÍCONE FLUTUANTE DO WHATSAPP --- */
+
+/* 1. Animação de Pulsar (Foco no Cliente) */
 @keyframes pulse {
-  0% {
-    transform: scale(1);
-    opacity: 0.6;
-  }
-  100% {
-    transform: scale(1.2);
+    0% {
+        transform: scale(0.9);
+        box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.7);
+    }
+    70% {
+        transform: scale(1.0);
+        box-shadow: 0 0 0 15px rgba(37, 211, 102, 0);
+    }
+    100% {
+        transform: scale(0.9);
+        box-shadow: 0 0 0 0 rgba(37, 211, 102, 0);
+    }
+}
+
+#whatsapp-float {
+    position: fixed; /* Fixa o elemento na tela */
+    bottom: 20px;
+    right: 20px;
+    background-color: #25d366; /* Verde WhatsApp */
+    color: white;
+    width: 60px;
+    height: 60px;
+    line-height: 60px; /* Centraliza o ícone verticalmente */
+    text-align: center;
+    border-radius: 50%; /* Transforma em círculo */
+    font-size: 30px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    z-index: 1000; /* Garante que fique acima de outros elementos */
+    transition: all 0.3s ease;
+    
+    /* Aplica a animação */
+    animation: pulse 2s infinite; 
+}
+
+#whatsapp-float:hover {
+    background-color: #128c7e;
+    transform: scale(1.1); /* Aumenta um pouco ao passar o mouse */
+    animation: none; /* Para o pulsar ao passar o mouse */
+}
+
+/* Tooltip (Texto de ajuda) */
+.tooltip-text {
+    visibility: hidden;
+    width: 120px;
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px 0;
+    position: absolute;
+    z-index: 1;
+    bottom: 5px; /* Posição acima do botão */
+    right: 70px; /* Posição à esquerda do botão */
+    opacity: 0;
+    transition: opacity 0.3s;
+    font-size: 0.9rem;
+    line-height: normal;
+}
+
+#whatsapp-float:hover .tooltip-text {
+    visibility: visible;
     opacity: 1;
-  }
 }
 
-.whatsapp-button {
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-  z-index: 999;
-  width: 60px;
-  height: 60px;
-  transition: transform 0.3s ease;
+/* Ajuste para telas menores */
+@media (max-width: 600px) {
+    #whatsapp-float {
+        width: 50px;
+        height: 50px;
+        line-height: 50px;
+        font-size: 25px;
+        bottom: 15px;
+        right: 15px;
+    }
 }
-
-.whatsapp-button img {
-  width: 100%;
-  height: 100%;
-  border-radius: 50%;
-  box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
-}
-
-.whatsapp-button:hover {
-  transform: scale(1.1);
-}
-
-.hero {
-  height: 110vh;
-  background-image: url('banner-novo.jpg.jpeg');
-  background-size: cover;
-  background-position: center;
-}
-
-@media screen and (max-width: 768px) {
-  .hero {
-    background-image: url('banner-mobile.jpg.jpeg');
-    background-position: center top;
-  }
-}
-
-#pix-code {
-  word-break: break-all;
-  overflow-wrap: break-word;
-  background-color: #f4f4f4;
-  color: #222; /* <- Cor escura pro texto */
-  padding: 10px;
-  border-radius: 8px;
-  font-size: 14px;
-  max-width: 100%;
-  margin-top: 10px;
-  box-shadow: 0 0 5px rgba(0,0,0,0.1);
-}
-
-.login-container {
-  max-width: 400px;
-  margin: 100px auto;
-  padding: 30px;
-  background-color: #1a1a1a;
-  color: white;
-  border-radius: 12px;
-  box-shadow: 0 0 10px gold;
-}
-
-.login-container h2 {
-  text-align: center;
-  margin-bottom: 20px;
-  color: gold;
-}
-
-.login-container label {
-  display: block;
-  margin-top: 15px;
-}
-
-.login-container input {
-  width: 100%;
-  padding: 10px;
-  margin-top: 5px;
-  border-radius: 8px;
-  border: none;
-}
-
-.login-container button {
-  margin-top: 20px;
-  width: 100%;
-  padding: 10px;
-  background-color: gold;
-  color: black;
-  border: none;
-  font-weight: bold;
-  border-radius: 8px;
-  cursor: pointer;
-}
-
-.admin-container {
-  max-width: 800px;
-  margin: 40px auto;
-  padding: 20px;
-  background: #111;
-  color: white;
-  border-radius: 12px;
-  box-shadow: 0 0 15px gold;
-}
-
-.admin-container h1,
-.admin-container h2 {
-  text-align: center;
-  color: gold;
-}
-
-.admin-container table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-bottom: 30px;
-}
-
-.admin-container th, td {
-  border: 1px solid gold;
-  padding: 10px;
-  text-align: center;
-}
-
-.admin-container input, button {
-  padding: 10px;
-  margin: 10px 5px;
-  border-radius: 8px;
-  border: none;
-}
-
-.admin-container button {
-  background-color: gold;
-  color: black;
-  font-weight: bold;
-  cursor: pointer;
-}
-
-.botao-remover {
-  background-color: #ff4d4d;
-  color: white;
-  border: none;
-  padding: 5px 10px;
-  margin-top: 10px;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-#mensagem-alerta {
-  position: fixed;
-  top: 20px;
-  right: 20px;
-  background-color: #111;
-  color: #FFD700;
-  border: 2px solid #FFD700;
-  padding: 15px 25px;
-  border-radius: 8px;
-  font-weight: bold;
-  box-shadow: 0 0 10px #FFD700;
-  z-index: 10000;
-  animation: fadeOut 3s forwards;
-}
-
-/* Animação para desaparecer suavemente */
-@keyframes fadeOut {
-  0%   { opacity: 1; }
-  80%  { opacity: 1; }
-  100% { opacity: 0; display: none; }
-}
-
